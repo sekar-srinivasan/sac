@@ -1,0 +1,107 @@
+On branch master
+
+No commits yet
+
+Changes to be committed:
+  (use "git rm --cached <file>..." to unstage)
+
+	new file:   db.sqlite3
+	new file:   donor/__init__.py
+	new file:   donor/__pycache__/__init__.cpython-36.pyc
+	new file:   donor/__pycache__/admin.cpython-36.pyc
+	new file:   donor/__pycache__/forms.cpython-36.pyc
+	new file:   donor/__pycache__/models.cpython-36.pyc
+	new file:   donor/__pycache__/urls.cpython-36.pyc
+	new file:   donor/__pycache__/views.cpython-36.pyc
+	new file:   donor/admin.py
+	new file:   donor/apps.py
+	new file:   donor/forms.py
+	new file:   donor/migrations/0001_initial.py
+	new file:   donor/migrations/0002_donor_active.py
+	new file:   donor/migrations/0003_auto_20180821_0559.py
+	new file:   donor/migrations/0004_auto_20180821_1915.py
+	new file:   donor/migrations/0005_donor_created_by.py
+	new file:   donor/migrations/__init__.py
+	new file:   donor/migrations/__pycache__/0001_initial.cpython-36.pyc
+	new file:   donor/migrations/__pycache__/0002_donor_active.cpython-36.pyc
+	new file:   donor/migrations/__pycache__/0003_auto_20180821_0559.cpython-36.pyc
+	new file:   donor/migrations/__pycache__/0004_auto_20180821_1915.cpython-36.pyc
+	new file:   donor/migrations/__pycache__/0005_donor_created_by.cpython-36.pyc
+	new file:   donor/migrations/__pycache__/__init__.cpython-36.pyc
+	new file:   donor/models.py
+	new file:   donor/templates/donor/donor_create.html
+	new file:   donor/templates/donor/donor_delete.html
+	new file:   donor/templates/donor/donor_detail.html
+	new file:   donor/templates/donor/donor_list.html
+	new file:   donor/templatetags/__init__.py
+	new file:   donor/templatetags/__pycache__/__init__.cpython-36.pyc
+	new file:   donor/templatetags/__pycache__/breadcrumbs.cpython-36.pyc
+	new file:   donor/templatetags/breadcrumbs.py
+	new file:   donor/tests.py
+	new file:   donor/urls.py
+	new file:   donor/views.py
+	new file:   manage.py
+	new file:   project/__init__.py
+	new file:   project/__pycache__/__init__.cpython-36.pyc
+	new file:   project/__pycache__/admin.cpython-36.pyc
+	new file:   project/__pycache__/forms.cpython-36.pyc
+	new file:   project/__pycache__/models.cpython-36.pyc
+	new file:   project/__pycache__/urls.cpython-36.pyc
+	new file:   project/__pycache__/views.cpython-36.pyc
+	new file:   project/admin.py
+	new file:   project/apps.py
+	new file:   project/forms.py
+	new file:   project/migrations/0001_initial.py
+	new file:   project/migrations/__init__.py
+	new file:   project/migrations/__pycache__/0001_initial.cpython-36.pyc
+	new file:   project/migrations/__pycache__/__init__.cpython-36.pyc
+	new file:   project/models.py
+	new file:   project/templates/project/project_create.html
+	new file:   project/templates/project/project_delete.html
+	new file:   project/templates/project/project_detail.html
+	new file:   project/templates/project/project_list.html
+	new file:   project/tests.py
+	new file:   project/urls.py
+	new file:   project/views.py
+	new file:   requirements.txt
+	new file:   sac/__init__.py
+	new file:   sac/__pycache__/__init__.cpython-36.pyc
+	new file:   sac/__pycache__/settings.cpython-36.pyc
+	new file:   sac/__pycache__/urls.cpython-36.pyc
+	new file:   sac/__pycache__/wsgi.cpython-36.pyc
+	new file:   sac/settings.py
+	new file:   sac/urls.py
+	new file:   sac/wsgi.py
+	new file:   search/__init__.py
+	new file:   search/__pycache__/__init__.cpython-36.pyc
+	new file:   search/__pycache__/admin.cpython-36.pyc
+	new file:   search/__pycache__/models.cpython-36.pyc
+	new file:   search/__pycache__/views.cpython-36.pyc
+	new file:   search/admin.py
+	new file:   search/apps.py
+	new file:   search/migrations/__init__.py
+	new file:   search/migrations/__pycache__/__init__.cpython-36.pyc
+	new file:   search/models.py
+	new file:   search/templates/search/search_list.html
+	new file:   search/templatetags/__init__.py
+	new file:   search/templatetags/__pycache__/__init__.cpython-36.pyc
+	new file:   search/templatetags/__pycache__/class_name.cpython-36.pyc
+	new file:   search/templatetags/class_name.py
+	new file:   search/tests.py
+	new file:   search/views.py
+	new file:   static/css/main.css
+	new file:   static/html/hello.html
+	new file:   templates/base.html
+	new file:   templates/create_template.html
+	new file:   templates/footer.html
+	new file:   templates/header.html
+	new file:   templates/index.html
+	new file:   templates/navbar.html
+	new file:   templates/registration/login.html
+	new file:   templates/snippets/form_snippet.html
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+	first_commit_files.txt
+

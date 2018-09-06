@@ -1,0 +1,54 @@
+{% load breadcrumbs %}
+<!-- <div class="navbar-fixed"> -->
+  <nav>
+    <div class="nav-wrapper white">
+      <!-- <a href="#!" class="brand-logo">Logo</a> -->
+      <div class="container">
+        <div class="row">
+      <a href="" data-activates="mobile-screen" class="button-collapse"><i class="material-icons left black">menu</i></a>
+      <div class="col s4">
+      <div class="white left active" >
+        <form action="{% url 'search' %}" class="active" method='GET'>
+          <div class="input-field" style="height:64px;">
+            <input name="q" type="search" id="search" required>
+            <label for="search" class="label-icon"><i class="material-icons orange-text text-darken-3">search</i></label>
+            <i class="material-icons">close</i>
+          </div>
+        </form>
+      </div>
+      </div>
+
+        <ul class="hide-on-med-and-down" >
+          <li><a href="{% url 'index' %}" class="black-text">HOME</a></li>
+          <li><a href="{% url 'donor:donor-list' %}" class="black-text">DONORS</a></li>
+          <li><a href="#" class="black-text">ABOUT</a></li>
+          <li><a href="{% url 'project:project-list' %}" class="black-text">PROJECTS</a></li>
+          <li><a href="#" class="black-text">FAQ</a></li>
+          <li><a href="#" class="black-text">GALLERY</a></li>
+          <li><a href="#" class="black-text">CONTACT</a></li>
+
+        </ul>
+        <div class="col s2 hide-on-med-and-down">
+            <ul class="right">
+              <li><a href="{% url 'login' %}"><i class="material-icons orange-text">power_settings_new</i></a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+
+      <ul class="side-nav" id="mobile-screen">
+        <li><a href="{% url 'index' %}" >HOME</a></li>
+        <li><a href="{% url 'donor:donor-list' %}" >DONORS</a></li>
+        <li><a href="#" >ABOUT</a></li>
+        <li><a href="{% url 'project:project-list' %}" >PROJECTS</a></li>
+        <li><a href="#" >FAQ</a></li>
+        <li><a href="#" >GALLERY</a></li>
+        <li><a href="#" >CONTACT</a></li>
+      </ul>
+    </div>
+  </nav>
+
+<!-- </div> -->

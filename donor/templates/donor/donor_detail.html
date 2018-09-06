@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load breadcrumbs %}
+{% block breadcrumbs %}
+  <div class="container">
+    <div class="grey lighten-1">
+      <div class="col s12 m6 offset-m3">
+        <a href='{% url 'donor:donor-list' %}' class="breadcrumb">
+  <i class="material-icons">home</i>
+            </a>
+        <a href='{% url 'donor:donor-detail' object.pk %}' class="breadcrumb">Detail for  {{ object }}</a>
+        <!-- <a href="" class="breadcrumb">Second</a> -->
+        <!-- <a href="" class="breadcrumb">Third</a> -->
+      </div>
+    </div>
+  </div>
+{% endblock breadcrumbs %}
+
+{% block content %}
+<div class="container">
+  <!-- <ul class="collection with-header">
+    <li class="collection-item grey"><h4>Donor: </h4></li>
+    <li class="collection-item">Name: {{ object }}</li>
+    <li class="collection-item">Phone: {{ object.phone }}</li>
+    <li class="collection-item">Item 3</li>
+  </ul> -->
+  <div class="container">
+    <table class="striped responsive-table">
+      <thead>
+        <tr>
+            <th>Name:</th>
+            <th>{{ object }}</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>Phone:</td>
+          <td>{{ object.phone }}</td>
+        </tr>
+        <tr>
+          <td>Email:</td>
+          <td>{{ object.email }}</td>
+        </tr>
+        <tr>
+          <td>Address:</td>
+          <td>{{ object.addr_street }}<br>
+            {% if object.addr_apt != '' %} Apt: {{ object.addr_apt }}<br> {% endif %}
+            {{ object.addr_city }} {{ object.addr_zip }}
+          </td>
+        </tr>
+
+        <tr>
+          <td>Active?</td>
+          <td>
+            {% if object.active %} Yes {% else %} No {% endif %}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+{% endblock %}

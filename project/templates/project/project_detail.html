@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+  <!-- <ul class="collection with-header">
+    <li class="collection-item grey"><h4>Donor: </h4></li>
+    <li class="collection-item">Name: {{ object }}</li>
+    <li class="collection-item">Phone: {{ object.phone }}</li>
+    <li class="collection-item">Item 3</li>
+  </ul> -->
+  <div class="container">
+    <table class="striped responsive-table">
+      <thead>
+        <tr>
+            <th>Project Name:</th>
+            <th>{{ object.name }}</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>Contact details:</td>
+          <td>
+            <ul class="collection">
+              <li class="collection-item"><h6>Name: {{ object.contact_name }}</h6></li>
+              <li class="collection-item">Phone: {{ object.contact_phone }}</li>
+              <li class="collection-item">Email: {{ object.contact_email }}</li>
+              <li class="collection-item">Address: {{ object.contact_addr_street }}<br>
+                {% if object.contact_addr_apt != '' %} Apt: {{ object.contact_addr_apt }}<br> {% endif %}
+                {{ object.contact_addr_city }} {{ object.contact_addr_state }} {{ object.contact_addr_zip }}
+              </li>
+            </ul>
+          </td>
+        </tr>
+
+        <tr>
+          <td>Location:</td>
+          <td>
+            {{ object.location_addr_street }}<br>
+              {% if object.location_addr_apt != '' %} Apt: {{ object.location_addr_apt }}<br> {% endif %}
+              {{ object.location_addr_city }} {{ object.location_addr_state }} {{ object.location_addr_zip }}
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+{% endblock %}
