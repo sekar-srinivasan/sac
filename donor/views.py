@@ -14,12 +14,6 @@ from django.views.generic import (
 
 # Create your views here.
 
-def index_view(request, *args, **kwargs):
-    #print(args, kwargs)
-    #print(request.user)
-    #return HttpResponse("<h1>Hello World</h1>")
-    return render(request, "index.html", {})
-
 class DonorCreateView(LoginRequiredMixin, CreateView):
     template_name = 'donor/donor_create.html'
     form_class = DonorForm

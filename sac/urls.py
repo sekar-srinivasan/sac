@@ -16,11 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from django.contrib.auth.views import LoginView
-from donor.views import index_view
+from accounts.views import index_view
 from search.views import SearchView
 
 urlpatterns = [
-    path('login/', LoginView.as_view(), name='login'),
+    path('accounts/', include('accounts.urls')),
+    path('userauth/', include('django.contrib.auth.urls')),
     path('search/', SearchView.as_view(), name='search'),
     path('', index_view, name='index'),
     path('sac/', index_view, name='index'),

@@ -1,0 +1,50 @@
+{% load breadcrumbs %}
+
+<nav class="nav-extended white">
+  <a href="#" data-activates="mobile-screen" class="button-collapse"><i class="material-icons">menu</i></a>
+ <div class="nav-wrapper container">
+   <a href="#" class="brand-logo left hide-on-med-and-down"><img src="http://sv.ashanet.org/wp-content/uploads/sites/45/2017/10/SACLogo-12-e1509040428519.png" alt="Asha for Education, Silicon Valley: Support a Child"
+     style=" width: 60%;"></a>
+
+
+   <ul class="right hide-on-med-and-down">
+
+     <li>
+       <form action="{% url 'search' %}" class="active" method='GET'>
+         <div class="input-field" style="height:64px;">
+           <input name="q" type="search" id="search" required>
+           <label for="search" class="label-icon"><i class="material-icons orange-text text-darken-3">search</i></label>
+           <i class="material-icons">close</i>
+         </div>
+       </form>
+     </li>
+     {% if user.is_authenticated %}
+         <li class="grey-text">Welcome, {{ user.username }}</li>
+         <li><a class="grey-text" href="{% url 'accounts:logout' %}"><i class="material-icons orange-text right">power_settings_new</i>Sign out</a></li>
+     {% else %}
+         <li><a class="grey-text" href="{% url 'accounts:login' %}"><i class="material-icons orange-text right">power_settings_new</i>Sign in</a></li>
+     {% endif %}
+   </ul>
+    </div>
+
+ <div class="nav-wrapper container">
+   <ul id="nav-mobile" class="right hide-on-med-and-down" >
+     <li><a href="{% url 'index' %}" class="grey-text">HOME</a></li>
+     <li><a href="{% url 'donor:donor-list' %}" class="grey-text">DONORS</a></li>
+     <li><a href="#" class="grey-text">ABOUT</a></li>
+     <li><a href="{% url 'project:project-list' %}" class="grey-text">PROJECTS</a></li>
+     <li><a href="#" class="grey-text">FAQ</a></li>
+     <li><a href="#" class="grey-text">GALLERY</a></li>
+     <li><a href="#" class="grey-text">CONTACT</a></li>
+   </ul>
+   <ul class="side-nav" id="mobile-screen" >
+     <li><a href="{% url 'index' %}" class="grey-text">HOME</a></li>
+     <li><a href="{% url 'donor:donor-list' %}" class="grey-text">DONORS</a></li>
+     <li><a href="#" class="grey-text">ABOUT</a></li>
+     <li><a href="{% url 'project:project-list' %}" class="grey-text">PROJECTS</a></li>
+     <li><a href="#" class="grey-text">FAQ</a></li>
+     <li><a href="#" class="grey-text">GALLERY</a></li>
+     <li><a href="#" class="grey-text">CONTACT</a></li>
+   </ul>
+  </div>
+</nav>
