@@ -10,13 +10,19 @@
    <ul class="right hide-on-med-and-down">
 
      <li>
-       <form action="{% url 'search' %}" class="active" method='GET'>
-         <div class="input-field" style="height:64px;">
-           <input name="q" type="search" id="search" required>
-           <label for="search" class="label-icon"><i class="material-icons orange-text text-darken-3">search</i></label>
-           <i class="material-icons">close</i>
-         </div>
-       </form>
+       <div class="col s12 m4 offset-m3" style="margin-right:20px;">
+         <nav>
+           <div class="nav-wrapper white">
+             <form action="{% url 'search' %}" class="active" method='GET'>
+               <div class="input-field">
+                 <input name="q" type="search" id="search" required>
+                 <label for="search" class="label-icon"><i class="material-icons orange-text text-darken-3">search</i></label>
+                 <i class="material-icons">close</i>
+               </div>
+             </form>
+           </div>
+         </nav>
+       </div>
      </li>
      {% if user.is_authenticated %}
          <li class="grey-text">Welcome, {{ user.username }}</li>
