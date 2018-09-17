@@ -26,7 +26,7 @@
      </li>
      {% if user.is_authenticated %}
          <li class="grey-text">Welcome, {{ user.username }}</li>
-         <li><a class="grey-text" href="{% url 'accounts:logout' %}"><i class="material-icons orange-text right">power_settings_new</i>Sign out</a></li>
+         <li><a class="grey-text" href="{% url 'accounts:logout' %}?next=/accounts/login/"><i class="material-icons orange-text right">power_settings_new</i>Sign out</a></li>
      {% else %}
          <li><a class="grey-text" href="{% url 'accounts:login' %}"><i class="material-icons orange-text right">power_settings_new</i>Sign in</a></li>
      {% endif %}
