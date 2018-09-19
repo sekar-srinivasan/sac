@@ -16,38 +16,25 @@
 
 <div class="container">
   {% if object_list %}
-    <!-- <ul class="collection with-header">
-      <li class="collection-item"><h4>Our Donors:</h4></li>
-      {% for instance in object_list %}
-      <li class="collection-item"><a href='{{instance.get_absolute_url}}'>{{ instance }} </a></li>
-      {% endfor %}
-    </ul> -->
     <div class="container">
-
-
       <table class="highlight responsive-table">
         <thead>
           <tr>
               <th>Our Donors:</th>
           </tr>
         </thead>
-
         <tbody>
           {% for instance in object_list %}
           <tr>
             <td><a href='{{instance.get_absolute_url}}'>{{ instance }} </a></td>
             <td><a class="btn red" href='{% url 'donor:donor-delete' instance.pk %}'>Remove</a></td>
-
           </tr>
           {% endfor %}
         </tbody>
-
       </table>
-
-
     </div>
   {% else %}
-    <h3>We are looking for donors</h3>
+    h3.grey-text{Please register as a donor}
   {% endif %}
 </div>
 {% endblock %}

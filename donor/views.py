@@ -25,32 +25,64 @@ class DonorCreateView(LoginRequiredMixin, CreateView):
         #like a pre_save
         instance.created_by=self.request.user
         # instance.save()
-        # like a post_save. This is not needed as we are going to call form_valid again below ehich does the save() and more...
+        # like a post_save. instance.save() is not needed as we are going to call form_valid again below ehich does the save() and more...
         return super(DonorCreateView, self).form_valid(form)
 
 class DonorDetailView(DetailView):
     template_name = 'donor/donor_detail.html'
-    queryset = Donor.objects.all()
-    # def get_queryset(self):
-    #     return Donor.objects.filter(owner=self.request.user)
+    def get_queryset(self):
+        # print('user printed from DonorDetailView is: ')
+        # print(self.request.user)
+        # print(self.request.user.is_staff)
+        # print(self.request.user.is_superuser)
+        queryset = Donor.objects.filter(created_by__id__iexact=self.request.user.id)
+        if (self.request.user.is_superuser | self.request.user.is_staff):
+            queryset = Donor.objects.all()
+        return queryset
+
+
 
 class DonorListView(LoginRequiredMixin, ListView):
     template_name = 'donor/donor_list.html'
-    queryset = Donor.objects.all()
+    form_class=DonorForm # If there is nothing in this list, need this form to be used while redirecting user to donor_create page.
+    def get_queryset(self):
+        # print('user printed from DonorListView is: ')
+        # print(self.request.user)
+        # print(self.request.user.is_staff)
+        # print(self.request.user.is_superuser)
+        queryset = Donor.objects.filter(created_by__id__iexact=self.request.user.id)
+        if (self.request.user.is_superuser | self.request.user.is_staff):
+            queryset = Donor.objects.all()
+        return queryset
+
+
 
 class DonorUpdateView(UpdateView):
     template_name = 'donor/donor_create.html'
     form_class = DonorForm
-    queryset = Donor.objects.all()
-    # def get_queryset(self):
-    #     return Donor.objects.filter(owner=self.request.user)
+    def get_queryset(self):
+        # print('user printed from DonorListView is: ')
+        # print(self.request.user)
+        # print(self.request.user.is_staff)
+        # print(self.request.user.is_superuser)
+        queryset = Donor.objects.filter(created_by__id__iexact=self.request.user.id)
+        if (self.request.user.is_superuser | self.request.user.is_staff):
+            queryset = Donor.objects.all()
+        return queryset
+
+
 
 class DonorDeleteView(DeleteView):
     template_name = 'donor/donor_delete.html'
-    queryset = Donor.objects.all()
-    # def get_queryset(self):
-    #     return Donor.objects.filter(owner=self.request.user)
-
+    def get_queryset(self):
+        # print('user printed from DonorListView is: ')
+        # print(self.request.user)
+        # print(self.request.user.is_staff)
+        # print(self.request.user.is_superuser)
+        queryset = Donor.objects.filter(created_by__id__iexact=self.request.user.id)
+        if (self.request.user.is_superuser | self.request.user.is_staff):
+            queryset = Donor.objects.all()
+        return queryset
 
     def get_success_url(self):
         return reverse('donor:donor-list')
