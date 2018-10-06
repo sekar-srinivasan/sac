@@ -1,10 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Donor
 from .forms import DonorForm
 from django.urls import reverse
+from django.contrib.auth.models import Group
 from django.contrib.auth.mixins import LoginRequiredMixin
+from accounts.views import RegistrationView
 
 from django.views.generic import (
+    TemplateView,
     CreateView,
     UpdateView,
     DeleteView,
@@ -13,6 +16,24 @@ from django.views.generic import (
 )
 
 # Create your views here.
+
+class DonationView(TemplateView):
+    template_name = 'donor/donation.html'
+
+class DonorUserRegistrationView(RegistrationView):
+    model = Donor
+    def form_valid(self, form):
+        super(DonorUserRegistrationView, self).form_valid(form)
+        donors_group, created = Group.objects.get_or_create(name='donors')
+        print('inside DonorUserRegistrationView: form_valid ')
+        # print('template_name: %s' % super.template_name)
+        print('template_name is: %s' % self.template_name)
+        print("username is: %s" % self.username)
+        print("user is: ")
+        print(self.user)
+        self.user.groups.add(donors_group)
+        # print(help(DonorUserRegistrationView))
+        return redirect(reverse('donor:donor-create'), user = self.user)
 
 class DonorCreateView(LoginRequiredMixin, CreateView):
     template_name = 'donor/donor_create.html'
@@ -31,11 +52,13 @@ class DonorCreateView(LoginRequiredMixin, CreateView):
 class DonorDetailView(DetailView):
     template_name = 'donor/donor_detail.html'
     def get_queryset(self):
-        # print('user printed from DonorDetailView is: ')
-        # print(self.request.user)
+        print('user printed from DonorDetailView is: ')
+        print(self.request.user)
         # print(self.request.user.is_staff)
         # print(self.request.user.is_superuser)
-        queryset = Donor.objects.filter(created_by__id__iexact=self.request.user.id)
+        queryset = self.request.user.donor_set.all()
+        print(queryset)
+        # queryset = Donor.objects.filter(created_by__id__iexact=self.request.user.id)
         if (self.request.user.is_superuser | self.request.user.is_staff):
             queryset = Donor.objects.all()
         return queryset
@@ -50,7 +73,7 @@ class DonorListView(LoginRequiredMixin, ListView):
         # print(self.request.user)
         # print(self.request.user.is_staff)
         # print(self.request.user.is_superuser)
-        queryset = Donor.objects.filter(created_by__id__iexact=self.request.user.id)
+        queryset = self.request.user.donor_set.all()
         if (self.request.user.is_superuser | self.request.user.is_staff):
             queryset = Donor.objects.all()
         return queryset
@@ -65,7 +88,7 @@ class DonorUpdateView(UpdateView):
         # print(self.request.user)
         # print(self.request.user.is_staff)
         # print(self.request.user.is_superuser)
-        queryset = Donor.objects.filter(created_by__id__iexact=self.request.user.id)
+        queryset = self.request.user.donor_set.all()
         if (self.request.user.is_superuser | self.request.user.is_staff):
             queryset = Donor.objects.all()
         return queryset
@@ -79,7 +102,7 @@ class DonorDeleteView(DeleteView):
         # print(self.request.user)
         # print(self.request.user.is_staff)
         # print(self.request.user.is_superuser)
-        queryset = Donor.objects.filter(created_by__id__iexact=self.request.user.id)
+        queryset = self.request.user.donor_set.all()
         if (self.request.user.is_superuser | self.request.user.is_staff):
             queryset = Donor.objects.all()
         return queryset

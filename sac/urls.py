@@ -20,6 +20,8 @@ from accounts.views import index_view
 from search.views import SearchView
 
 urlpatterns = [
+    path('partner/', include('partner.urls')),
+    path('child/', include('child.urls')),
     path('accounts/', include('accounts.urls')),
     path('userauth/', include('django.contrib.auth.urls')),
     path('search/', SearchView.as_view(), name='search'),

@@ -5,10 +5,12 @@ from .views import(
     ProjectListView,
     ProjectUpdateView,
     ProjectDeleteView,
+    PartnerUserRegistrationView,
 )
 
 app_name = 'project'
 urlpatterns = [
+    path('create-partner-user/', PartnerUserRegistrationView.as_view(), name='create-partner-user'),
     path('create/', ProjectCreateView.as_view(), name='project-create'),
     path('<int:pk>/', ProjectDetailView.as_view(), name='project-detail'),
     path('', ProjectListView.as_view(), name='project-list'),

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+  <!-- <ul class="collection with-header">
+    <li class="collection-item grey"><h4>Donor: </h4></li>
+    <li class="collection-item">Name: {{ object }}</li>
+    <li class="collection-item">Phone: {{ object.phone }}</li>
+    <li class="collection-item">Item 3</li>
+  </ul> -->
+  <div class="container">
+    <p>
+    <table class="striped responsive-table">
+      <thead>
+        <tr>
+            <th>Child Name:</th>
+            <th>{{ object }}</th>
+        </tr>
+        <tr>
+            <th>Project:</th>
+            <th>{{ object.project }}</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>Child Info:</td>
+          <td>
+            <ul class="collection">
+              <li class="collection-item"><h6>Gender: {{ object.gender }}</h6></li>
+              <li class="collection-item">Age: {{ object.age }}</li>
+              <!-- <li class="collection-item">User: {{ object.project_owner_user.username }}</li> -->
+            </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </p>
+    <a class="waves-effect waves-light btn" href='{% url 'child:child-update' object.pk %}'>Update</a>
+    <a class="waves-effect waves-light btn danger" href='{% url 'child:child-delete' object.pk %}'>Delete</a>
+  </div>
+</div>
+
+
+{% endblock %}

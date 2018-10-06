@@ -27,7 +27,11 @@
           {% for instance in object_list %}
           <tr>
             <td><a href='{{instance.get_absolute_url}}'>{{ instance }} </a></td>
-            <td><a class="btn red" href='{% url 'donor:donor-delete' instance.pk %}'>Remove</a></td>
+            {% if request.user.is_superuser %}
+              <td><a class="btn red" href='{% url 'donor:donor-delete' instance.pk %}'>Remove</a></td>
+            {% elif request.user.is_staff %}
+              <td><a class="btn red" href='{% url 'donor:donor-delete' instance.pk %}'>Remove</a></td>
+            {% endif %}
           </tr>
           {% endfor %}
         </tbody>

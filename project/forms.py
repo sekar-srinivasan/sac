@@ -14,6 +14,7 @@ class ProjectForm(forms.ModelForm):
                                 )
 
     contact_phone = forms.CharField()
+    user_name = forms.CharField(label='User Name')
     # description = forms.CharField(
     #                         widget=forms.Textarea(attrs={"placeholder": "Your Description Not Here",
     #                                                         "class": "new-class-name two",

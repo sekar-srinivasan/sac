@@ -2,7 +2,8 @@ from django.db import models
 from django.urls import reverse
 from django.conf import settings
 from django.db.models import Q
-
+from child.models import Child
+from datetime import date
 # Create your models here.
 
 class DonorQuerySet(models.QuerySet):
@@ -56,11 +57,12 @@ class Donor(models.Model):
         return self.first_name + ' ' + self.last_name
 
 
-#
-# class Donation(models.Model):
-#     donor = models.ForeignKey(Donor, on_delete=models.PROTECT)
-#     child = models.ForeignKey(Child, on_delete=models.PROTECT)
-#     amount = models.FloatField()
-#
-#     def __str__(self):
-#         return 'Donor: ' + self.donor + 'Child: ' + self.child + 'Donation: ' + self.amount
+
+class Donation(models.Model):
+    donor = models.ForeignKey(Donor, on_delete=models.PROTECT)
+    child = models.ForeignKey(Child, on_delete=models.PROTECT)
+    sponsorship_amount = models.FloatField()
+    expiry_date = models.DateField(default=date.today().replace(year=date.today().year+1))
+
+    def __str__(self):
+        return 'Donor: ' + self.donor + 'Child: ' + self.child + 'Donation: ' + self.amount

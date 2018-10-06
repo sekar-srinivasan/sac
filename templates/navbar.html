@@ -1,55 +1,68 @@
 {% load breadcrumbs %}
-<!-- <div class="navbar-fixed"> -->
-  <nav>
-    <div class="nav-wrapper white">
-      <!-- <a href="#!" class="brand-logo">Logo</a> -->
-      <div class="container">
-        <div class="row">
-      <a href="" data-activates="mobile-screen" class="button-collapse"><i class="material-icons left black">menu</i></a>
-      <div class="col s4">
-      <div class="white left active" >
-        <form action="{% url 'search' %}" class="active" method='GET'>
-          <div class="input-field" style="height:64px;">
-            <input name="q" type="search" id="search" required>
-            <label for="search" class="label-icon"><i class="material-icons orange-text text-darken-3">search</i></label>
-            <i class="material-icons">close</i>
-          </div>
-        </form>
-      </div>
-      </div>
 
-        <ul class="hide-on-med-and-down" >
-          <li><a href="{% url 'index' %}" class="black-text">HOME</a></li>
-          <li><a href="{% url 'donor:donor-list' %}" class="black-text">DONORS</a></li>
-          <li><a href="#" class="black-text">ABOUT</a></li>
-          <li><a href="{% url 'project:project-list' %}" class="black-text">PROJECTS</a></li>
-          <li><a href="#" class="black-text">FAQ</a></li>
-          <li><a href="#" class="black-text">GALLERY</a></li>
-          <li><a href="#" class="black-text">CONTACT</a></li>
-
-        </ul>
-        <div class="col s2 hide-on-med-and-down">
-            <ul class="right">
-
-              <li><a href="{% url 'login' %}"><i class="material-icons orange-text">power_settings_new</i></a>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-      </div>
+<nav class="nav-extended white">
+  <a href="#" data-activates="mobile-screen" class="button-collapse"><i class="material-icons">menu</i></a>
+ <div class="nav-wrapper">
+   <a href="#" class="brand-logo left hide-on-med-and-down"><img src="http://sv.ashanet.org/wp-content/uploads/sites/45/2017/10/SACLogo-12-e1509040428519.png" alt="Asha for Education, Silicon Valley: Support a Child"
+     style=" width: 60%;"></a>
 
 
-      <ul class="side-nav" id="mobile-screen">
-        <li><a href="{% url 'index' %}" >HOME</a></li>
-        <li><a href="{% url 'donor:donor-list' %}" >DONORS</a></li>
-        <li><a href="#" >ABOUT</a></li>
-        <li><a href="{% url 'project:project-list' %}" >PROJECTS</a></li>
-        <li><a href="#" >FAQ</a></li>
-        <li><a href="#" >GALLERY</a></li>
-        <li><a href="#" >CONTACT</a></li>
-      </ul>
+   <ul class="right hide-on-med-and-down">
+    <li><a href="{% url 'donor:donation' %}" class="btn orange">Donate</a></li>
+     <li>
+
+     </li>
+     <!-- <p class="black-text">{{ request.path }}</p> -->
+
+     {% if user.is_authenticated %}
+         <li class="grey-text">Welcome, {{ user.username }}</li>
+         <li><a class="grey-text" href="{% url 'accounts:logout' %}?next=/accounts/login/"><i class="material-icons orange-text right">power_settings_new</i>Sign out</a></li>
+     {% else %}
+         <li><a class="grey-text" href="{% url 'accounts:login' %}?next={{ request.path }}"><i class="material-icons orange-text right">power_settings_new</i>Sign in</a></li>
+     {% endif %}
+   </ul>
     </div>
-  </nav>
+<div class="row">
+  <div class="col s10 m9 offset-m3">
+    <div class="nav-wrapper">
+      <ul id="nav-mobile" class="hide-on-med-and-down" >
+        <li><a href="{% url 'index' %}" class="grey-text">HOME</a></li>
+        <li><a href="{% url 'donor:donor-list' %}" class="grey-text">DONORS</a></li>
+        <li><a href="#" class="grey-text">ABOUT</a></li>
+        <li><a href="{% url 'project:project-list' %}" class="grey-text">PROJECTS</a></li>
+        <li><a href="{% url 'partner:partner' %}" class="grey-text">PARTNERS</a></li>
+        <li><a href="#" class="grey-text">FAQ</a></li>
+        <li><a href="#" class="grey-text">GALLERY</a></li>
+        <li><a href="#" class="grey-text">CONTACT</a></li>
+      </ul>
+      <ul class="side-nav" id="mobile-screen" >
+        <li><a href="{% url 'index' %}" class="grey-text">HOME</a></li>
+        <li><a href="{% url 'donor:donor-list' %}" class="grey-text">DONORS</a></li>
+        <li><a href="#" class="grey-text">ABOUT</a></li>
+        <li><a href="{% url 'project:project-list' %}" class="grey-text">PROJECTS</a></li>
+        <li><a href="{% url 'partner:partner' %}" class="grey-text">PARTNERS</a></li>
+        <li><a href="#" class="grey-text">FAQ</a></li>
+        <li><a href="#" class="grey-text">GALLERY</a></li>
+        <li><a href="#" class="grey-text">CONTACT</a></li>
+      </ul>
+      <!-- <div class="col s12 m4" style="margin-right:20px;"> -->
 
-<!-- </div> -->
+      <div class="col s12 m3 right">
+        <nav>
+          <div class="nav-wrapper white">
+            <form action="{% url 'search' %}" class="active" method='GET'>
+              <div class="input-field">
+                <input name="q" type="search" id="search" required>
+                <label for="search" class="label-icon"><i class="material-icons orange-text text-darken-3">search</i></label>
+                <i class="material-icons">close</i>
+              </div>
+            </form>
+          </div>
+        </nav>
+      </div>
+     </div>
+
+  </div>
+</div>
+
+</nav>
