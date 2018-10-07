@@ -21,8 +21,8 @@ class PartnerView(LoginRequiredMixin, ListView):
         # queryset = Project.objects.all()
         print(queryset)
         # queryset = Child.objects.filter(created_by__id__iexact=self.request.user.id)
-        # if (self.request.user.is_superuser | self.request.user.is_staff):
-        #     queryset = Project.objects.all()
+        if (self.request.user.is_superuser | self.request.user.is_staff):
+            queryset = Project.objects.all()
         return queryset
 
     def get_context_data(self, **kwargs):
