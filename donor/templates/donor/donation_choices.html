@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load breadcrumbs %}
+{% block breadcrumbs %}
+  <div class="container">
+    <div class="grey lighten-1">
+      <div class="col s12 m6 offset-m3">
+        <a href='{% url 'index' %}' class="breadcrumb"><i class="material-icons">home</i></a>
+        <a href='{% url 'donor:donor-list' %}' class="breadcrumb">Donors</a>
+        <!-- <a href="" class="breadcrumb">Second</a> -->
+        <!-- <a href="" class="breadcrumb">Third</a> -->
+      </div>
+    </div>
+  </div>
+{% endblock breadcrumbs %}
+
+{% block content %}
+  <div class="container">
+    {% include 'donor/donation_choices_snippet.html' %}
+  </div>
+{% endblock %}

@@ -12,7 +12,8 @@ from child.views import(
 
 app_name = 'partner'
 urlpatterns = [
-    path('', PartnerView.as_view(), name='partner'),
+    path('', PartnerView.as_view(), name='partner-dashboard'),
+    path('<int:project_pk>/', PartnerView.as_view(), name='partner-dashboard'),
 
     # path('create/<int:project_pk>', ChildCreateView.as_view(), name='child-create'),
     # path('<int:pk>/', ChildDetailView.as_view(), name='child-detail'),

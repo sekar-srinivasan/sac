@@ -7,8 +7,8 @@ from .choices import GENDER_CHOICES
 # Create your models here.
 User = settings.AUTH_USER_MODEL
 class Child(models.Model):
-    project_partner_user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='project_children')
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    project_partner_user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='partner_user_children')
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='project_children')
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)

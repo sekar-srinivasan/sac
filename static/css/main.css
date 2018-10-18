@@ -29,3 +29,16 @@ i.icon-blue {
   left: 50%;
   transform: translate(-50%, -50%)
 }
+
+.dropdown-content li > a, .dropdown-content li > span {
+    /* color: #fb8c00 !important; */
+    color: grey !important;
+}
+
+
+/* ul.dropdown-content.select-dropdown li span {
+    color: grey;
+} */
+
+/* ul.dropdown-content.select-dropdown li:.disabled span { color: #1976d2; } */
+/* ul.dropdown-content.select-dropdown li:not(.disabled) span { color: #1976d2; } */

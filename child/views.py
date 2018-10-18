@@ -40,7 +40,7 @@ class ChildDetailView(DetailView):
         print(self.request.user)
         # print(self.request.user.is_staff)
         # print(self.request.user.is_superuser)
-        queryset = self.request.user.project_children.all()
+        queryset = self.request.user.partner_user_children.all()
         print(queryset)
         # queryset = Child.objects.filter(created_by__id__iexact=self.request.user.id)
         if (self.request.user.is_superuser | self.request.user.is_staff):
@@ -57,7 +57,7 @@ class ChildListView(LoginRequiredMixin, ListView):
         # print(self.request.user)
         # print(self.request.user.is_staff)
         # print(self.request.user.is_superuser)
-        queryset = self.request.user.project_children.all()
+        queryset = self.request.user.partner_user_children.all()
         # queryset = Child.objects.filter(created_by__id__iexact=self.request.user.id)
         if (self.request.user.is_superuser | self.request.user.is_staff):
             queryset = Child.objects.all()
@@ -73,7 +73,7 @@ class ChildUpdateView(UpdateView):
         # print(self.request.user)
         # print(self.request.user.is_staff)
         # print(self.request.user.is_superuser)
-        queryset = self.request.user.project_children.all()
+        queryset = self.request.user.partner_user_children.all()
         # queryset = Child.objects.filter(created_by__id__iexact=self.request.user.id)
         if (self.request.user.is_superuser | self.request.user.is_staff):
             queryset = Child.objects.all()
@@ -89,7 +89,7 @@ class ChildDeleteView(DeleteView):
         # print(self.request.user.is_staff)
         # print(self.request.user.is_superuser)
         # queryset = Child.objects.filter(created_by__id__iexact=self.request.user.id)
-        queryset = self.request.user.project_children.all()
+        queryset = self.request.user.partner_user_children.all()
         if (self.request.user.is_superuser | self.request.user.is_staff):
             queryset = Child.objects.all()
         return queryset

@@ -36,7 +36,7 @@ class DonorManager(models.Manager):
 
 User = settings.AUTH_USER_MODEL
 class Donor(models.Model):
-    created_by = models.ForeignKey(User, on_delete=models.PROTECT)
+    donor_user = models.OneToOneField(User, on_delete=models.PROTECT)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     phone = models.CharField(blank=True, max_length=20)
@@ -59,10 +59,12 @@ class Donor(models.Model):
 
 
 class Donation(models.Model):
-    donor = models.ForeignKey(Donor, on_delete=models.PROTECT)
-    child = models.ForeignKey(Child, on_delete=models.PROTECT)
+    donor = models.ForeignKey(Donor, on_delete=models.PROTECT, related_name='donation_donors')
+    child = models.ForeignKey(Child, on_delete=models.PROTECT, related_name='donation_children')
     sponsorship_amount = models.FloatField()
     expiry_date = models.DateField(default=date.today().replace(year=date.today().year+1))
 
+    def get_absolute_url(self):
+        return reverse('donor:donation-detail', kwargs={'pk': self.pk})
     def __str__(self):
-        return 'Donor: ' + self.donor + 'Child: ' + self.child + 'Donation: ' + self.amount
+        return 'Donor: ' + str(self.donor) + 'Child: ' + str(self.child) + 'Donation: ' + str(self.sponsorship_amount)

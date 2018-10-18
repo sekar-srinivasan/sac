@@ -4,7 +4,8 @@ from .forms import ProjectForm
 from django.urls import reverse
 from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
-from accounts.views import RegistrationView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from accounts.views import RegistrationView, GroupRequiredMixin, PartnerGroupRequiredMixin, AdminGroupRequiredMixin
 
 from django.views.generic import (
     CreateView,
@@ -47,7 +48,7 @@ class PartnerUserRegistrationView(RegistrationView):
         # print(help(PartnerUserRegistrationView))
         return redirect(reverse('project:project-create'), user = self.user)
 
-class ProjectCreateView(CreateView):
+class ProjectCreateView(LoginRequiredMixin, PartnerGroupRequiredMixin, CreateView):
     template_name = 'project/project_create.html'
     form_class = ProjectForm
     # def get_context_data(self, **kwargs):
@@ -81,14 +82,14 @@ class ProjectListView(ListView):
     template_name = 'project/project_list.html'
     queryset = Project.objects.all()
 
-class ProjectUpdateView(UpdateView):
+class ProjectUpdateView(LoginRequiredMixin, AdminGroupRequiredMixin, UpdateView):
     template_name = 'project/project_create.html'
     form_class = ProjectForm
     queryset = Project.objects.all()
     # def get_queryset(self):
     #     return Project.objects.filter(owner=self.request.user)
 
-class ProjectDeleteView(DeleteView):
+class ProjectDeleteView(LoginRequiredMixin, AdminGroupRequiredMixin, DeleteView):
     template_name = 'project/project_delete.html'
     queryset = Project.objects.all()
     # def get_queryset(self):

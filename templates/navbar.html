@@ -8,7 +8,7 @@
 
 
    <ul class="right hide-on-med-and-down">
-    <li><a href="{% url 'donor:donation' %}" class="btn orange">Donate</a></li>
+    <li><a href="{% url 'index' %}#donation" class="btn orange darken-3">Donate</a></li>
      <li>
 
      </li>
@@ -18,7 +18,8 @@
          <li class="grey-text">Welcome, {{ user.username }}</li>
          <li><a class="grey-text" href="{% url 'accounts:logout' %}?next=/accounts/login/"><i class="material-icons orange-text right">power_settings_new</i>Sign out</a></li>
      {% else %}
-         <li><a class="grey-text" href="{% url 'accounts:login' %}?next={{ request.path }}"><i class="material-icons orange-text right">power_settings_new</i>Sign in</a></li>
+         <li><a class="grey-text" href="{% url 'accounts:login' %}"><i class="material-icons orange-text right">power_settings_new</i>Sign in</a></li>
+         <!-- <li><a class="grey-text" href="{% url 'accounts:login' %}?next={{ request.path }}"><i class="material-icons orange-text right">power_settings_new</i>Sign in</a></li> -->
      {% endif %}
    </ul>
     </div>
@@ -27,20 +28,20 @@
     <div class="nav-wrapper">
       <ul id="nav-mobile" class="hide-on-med-and-down" >
         <li><a href="{% url 'index' %}" class="grey-text">HOME</a></li>
-        <li><a href="{% url 'donor:donor-list' %}" class="grey-text">DONORS</a></li>
+        <li><a href="{% url 'donor:donor-index' %}" class="grey-text">DONORS</a></li>
         <li><a href="#" class="grey-text">ABOUT</a></li>
         <li><a href="{% url 'project:project-list' %}" class="grey-text">PROJECTS</a></li>
-        <li><a href="{% url 'partner:partner' %}" class="grey-text">PARTNERS</a></li>
+        <li><a href="{% url 'partner:partner-dashboard'%}" class="grey-text">PARTNERS</a></li>
         <li><a href="#" class="grey-text">FAQ</a></li>
         <li><a href="#" class="grey-text">GALLERY</a></li>
         <li><a href="#" class="grey-text">CONTACT</a></li>
       </ul>
       <ul class="side-nav" id="mobile-screen" >
         <li><a href="{% url 'index' %}" class="grey-text">HOME</a></li>
-        <li><a href="{% url 'donor:donor-list' %}" class="grey-text">DONORS</a></li>
+        <li><a href="{% url 'donor:donor-index' %}" class="grey-text">DONORS</a></li>
         <li><a href="#" class="grey-text">ABOUT</a></li>
         <li><a href="{% url 'project:project-list' %}" class="grey-text">PROJECTS</a></li>
-        <li><a href="{% url 'partner:partner' %}" class="grey-text">PARTNERS</a></li>
+        <li><a href="{% url 'partner:partner-dashboard' %}" class="grey-text">PARTNERS</a></li>
         <li><a href="#" class="grey-text">FAQ</a></li>
         <li><a href="#" class="grey-text">GALLERY</a></li>
         <li><a href="#" class="grey-text">CONTACT</a></li>

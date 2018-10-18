@@ -1,5 +1,5 @@
 from django import forms
-from .models import Donor
+from .models import Donor, Donation
 
 class DonorForm(forms.ModelForm):
 
@@ -34,4 +34,12 @@ class DonorForm(forms.ModelForm):
             'addr_apt',
             'addr_city',
             'addr_zip',
+        ]
+
+class DonationForm(forms.ModelForm):
+    class Meta:
+        model = Donation
+        fields = [
+            'sponsorship_amount',
+            'expiry_date',
         ]
