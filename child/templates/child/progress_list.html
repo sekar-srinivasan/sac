@@ -9,34 +9,46 @@
       <li class="collection-item"><a href='{{instance.get_absolute_url}}'>{{ instance }} </a></li>
       {% endfor %}
     </ul> -->
-    <div class="container">
       <div class="container">
         <div class="container">
+        <div class="container">
+
       <table class="highlight responsive-table">
-        <thead>
+
+        <thead class="center">
           <tr>
-              <th>Our Children:</th>
+              <th class="center">Child:</th>
+              <th class="left">{{ child }}</th>
+          </tr>
+          <tr>
+              <th class="center">Project:</th>
+              <th class="left">{{ child.project }}</th>
           </tr>
         </thead>
+      </table>
+      </div>
+      </div>
+      </div>
+      <div class="container">
+
+      <table class="highlight responsive-table">
 
         <tbody>
           {% for instance in object_list %}
           <tr>
-            <td><a href='{{instance.get_absolute_url}}'>{{ instance }} </a></td>
+            <td class="center"><a href='{{instance.get_absolute_url}}'>{{ instance }} </a></td>
           </tr>
           {% endfor %}
         </tbody>
 
       </table>
-      </div>
-      </div>
     </div>
   {% else %}
     <div class="col s6">
-      <h5 class= "grey-text">We have not added our children to <label><strong>SUPPORT A CHILD</strong></label> yet</h5>
+      <h5 class= "grey-text">No progress report to display yet</h5>
       <br><br>
       <p>
-        <a class="waves-effect waves-light btn large" href='{% url 'project:project-create' %}'>Add Project</a>
+        <a class="waves-effect waves-light btn large" href='{% url 'child:progress-create' %}'>Add Project</a>
       </p>
     </div>
   {% endif %}

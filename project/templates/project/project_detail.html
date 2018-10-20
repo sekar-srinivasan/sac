@@ -33,7 +33,7 @@
             </ul>
           </td>
         </tr>
-
+        {% if object.location_addr_city != '' or object.location_addr_state != '' %}
         <tr>
           <td>Location:</td>
           <td>
@@ -42,13 +42,14 @@
               {{ object.location_addr_city }} {{ object.location_addr_state }} {{ object.location_addr_zip }}
           </td>
         </tr>
+        {% endif %}
       </tbody>
     </table>
 
     {% if request.user.is_staff or request.user.is_superuser %}
     <p>
-      <a class="waves-effect waves-light btn" href='{% url 'project:project-update' object.pk %}'>Update</a>
-      <a class="waves-effect waves-light btn red" href='{% url 'project:project-delete' object.pk %}'>Delete</a>
+      <a class="waves-effect waves-light btn right" href='{% url 'project:project-update' object.pk %}'>Update</a>
+      <a class="waves-effect waves-light btn red right" href='{% url 'project:project-delete' object.pk %}'>Delete</a>
     </p>
     {% endif %}
   </div>

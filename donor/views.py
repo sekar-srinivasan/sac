@@ -6,7 +6,7 @@ from .forms import DonorForm, DonationForm
 from django.urls import reverse
 from django.contrib.auth.models import Group
 from django.contrib.auth.mixins import LoginRequiredMixin
-from accounts.views import RegistrationView, GroupRequiredMixin, DonorsGroupRequiredMixin
+from accounts.views import RegistrationView, DonorsGroupRequiredMixin, AdminGroupRequiredMixin
 import random
 from datetime import date
 from .models import Donor, Donation
@@ -28,12 +28,62 @@ class DonorIndexView(TemplateView):
     def get(self, request):
         if self.request.user.is_authenticated:
             if (self.request.user.is_superuser | self.request.user.is_staff):
-                return redirect(reverse('donor:donor-list'))
-            # elif self.request.user.groups.filter(name='donors').exists():
-            #     print("user is in donors group")
-            #     return redirect(reverse('donor:donor-home'))
+                return redirect(reverse('donor:admin-donations-dashboard'))
+            elif self.request.user.groups.filter(name='donors').exists():
+                print("user is in donors group")
+                return redirect(reverse('donor:donor-dashboard'))
         return super(DonorIndexView,self).get(request)
 
+
+
+class AdminDonationsDashboardView(LoginRequiredMixin, AdminGroupRequiredMixin, ListView):
+    template_name = 'donor/admin_donations_dashboard.html'
+    queryset = Donor.objects.all()
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(AdminDonationsDashboardView, self).get_context_data(*args, **kwargs)
+        print(self.queryset.exists())
+        if self.queryset.exists():
+            donor_pk = self.kwargs.get('donor_pk', self.queryset.first().pk)
+            donor = self.queryset.get(pk=donor_pk)
+            print(self.kwargs)
+            print(donor_pk)
+            context['donor'] = donor
+            context['donations_list'] = donor.donor_donations.all()
+        # context['child_list'] = self.request.user.partner_user_children.all()
+        # context['project_list'] = self.request.user.project_set.all()
+        # context['child_list'] = Project.objects.get(pk=project_pk).project_children.all()
+        # or use self.kwargs.get('project_pk')
+        # And so on for more models
+        # else:
+        #     messages.error(self.request, "Please start adding your projects by clicking on <label> ADD PROJECT </label>.")
+        return context
+
+class DonorDashboardView(LoginRequiredMixin, DonorsGroupRequiredMixin, ListView):
+    template_name = 'donor/donor_dashboard.html'
+    # group_required = [u'project_partners']
+    def get_queryset(self, *args, **kwargs):
+        print('user printed from DonorDashboardView is: ')
+        print(self.request.user)
+        print(self.kwargs)
+        print(self.args)
+        # queryset = Child.objects.filter(created_by__id__iexact=self.request.user.id)
+        if (self.request.user.is_superuser | self.request.user.is_staff):
+            queryset = Donation.objects.all()
+        else:
+            queryset = self.request.user.donor.donor_donations.all()
+        return queryset
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(DonorDashboardView, self).get_context_data(*args, **kwargs)
+        queryset = self.get_queryset(*args, **kwargs)
+        print(queryset.exists())
+        if queryset.exists():
+            child_pk = self.kwargs.get('child_pk', self.get_queryset(*args, **kwargs).first().child.pk)
+            child = Child.objects.get(pk=child_pk)
+            context['child'] = child
+            context['child_progress_list'] = child.progress_set.all()
+        return context
 
 class DonationCreateView(LoginRequiredMixin, DonorsGroupRequiredMixin, CreateView):
     template_name = 'donor/donation_create.html'
@@ -57,6 +107,10 @@ class DonationCreateView(LoginRequiredMixin, DonorsGroupRequiredMixin, CreateVie
         #like a pre_save
         print("DonationCreateView:Inside form_valid")
         print(self.request.user.donor)
+        print("POST data:")
+        print(self.request.POST)
+        print("POST sponsorship_amount is:")
+        print(self.request.POST.get('sponsorship_amount'))
         instance.donor=self.request.user.donor
         def child_table_not_empty(self):
             has_child = False
@@ -89,11 +143,15 @@ class DonationCreateView(LoginRequiredMixin, DonorsGroupRequiredMixin, CreateVie
         print(self.request.path)
         print("GET next is:")
         print(self.request.GET.get('next'))
+        print(self.request.GET.get('sponsorship_amount'))
         print("POST next is:")
         print(self.request.POST.get('next'))
+        print(self.request.POST.get('sponsorship_amount'))
         if not user_has_donor_profile(self):
             path = reverse('donor:donor-create') #, kwargs={'question_id': 123})
-            params = urlencode({'next': '/donor/donation?sponsorship_amount=25'})
+            next_url = reverse('donor:donation') + '?sponsorship_amount=' + self.request.GET.get('sponsorship_amount')
+            print("next_url is: %s", next_url)
+            params = urlencode({'next': next_url})
             url = "%s?%s" % (path, params)
             print(url)
             return redirect(url)
@@ -101,7 +159,7 @@ class DonationCreateView(LoginRequiredMixin, DonorsGroupRequiredMixin, CreateVie
         # next='/donor/donation?sponsorship_amount=25'
         return super(DonationCreateView, self).render_to_response(context)
 
-class DonationDetailView(DetailView):
+class DonationDetailView(LoginRequiredMixin, DonorsGroupRequiredMixin, DetailView):
     template_name = 'donor/donation_detail.html'
     queryset = Donation.objects.all()
     def get_queryset(self):
@@ -136,7 +194,7 @@ class DonorUserRegistrationView(RegistrationView):
         # print(help(DonorUserRegistrationView))
         return redirect(reverse('donor:donor-create'), user = self.user)
 
-class DonorCreateView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
+class DonorCreateView(LoginRequiredMixin, DonorsGroupRequiredMixin, CreateView):
     template_name = 'donor/donor_create.html'
     form_class = DonorForm
     group_required = [u'donors', u'admin']
@@ -189,7 +247,7 @@ class DonorCreateView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
             return '/donor/donation?sponsorship_amount=25'
         return super(DonorCreateView, self).get_success_url()
 
-class DonorDetailView(DetailView):
+class DonorDetailView(LoginRequiredMixin, DonorsGroupRequiredMixin, DetailView):
     template_name = 'donor/donor_detail.html'
     queryset = Donor.objects.all()
     # def get_queryset(self):
@@ -210,12 +268,12 @@ class DonorDetailView(DetailView):
         return obj
 
 
-class DonorListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
+class DonorListView(LoginRequiredMixin, DonorsGroupRequiredMixin, ListView):
     template_name = 'donor/donor_list.html'
     group_required = [u'admin']
     queryset = Donor.objects.all()
 
-class DonorUpdateView(UpdateView):
+class DonorUpdateView(LoginRequiredMixin, DonorsGroupRequiredMixin, UpdateView):
     template_name = 'donor/donor_create.html'
     form_class = DonorForm
     queryset = Donor.objects.all()
@@ -231,7 +289,7 @@ class DonorUpdateView(UpdateView):
         return obj
 
 
-class DonorDeleteView(DeleteView):
+class DonorDeleteView(LoginRequiredMixin, AdminGroupRequiredMixin, DeleteView):
     template_name = 'donor/donor_delete.html'
     queryset = Donor.objects.all()
 

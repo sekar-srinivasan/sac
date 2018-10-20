@@ -1,5 +1,5 @@
 from django import forms
-from .models import Child
+from .models import Child, Progress
 from .choices import GENDER_CHOICES
 
 class ChildForm(forms.ModelForm):
@@ -46,4 +46,15 @@ class ChildForm(forms.ModelForm):
             'last_name',
             'gender',
             'age',
+        ]
+
+
+class ProgressForm(forms.ModelForm):
+    class Meta:
+        model = Progress
+        fields = [
+            'progress_date',
+            'milestone',
+            'short_description',
+            'long_description',
         ]

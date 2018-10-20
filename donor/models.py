@@ -59,12 +59,12 @@ class Donor(models.Model):
 
 
 class Donation(models.Model):
-    donor = models.ForeignKey(Donor, on_delete=models.PROTECT, related_name='donation_donors')
-    child = models.ForeignKey(Child, on_delete=models.PROTECT, related_name='donation_children')
+    donor = models.ForeignKey(Donor, on_delete=models.PROTECT, related_name='donor_donations')
+    child = models.ForeignKey(Child, on_delete=models.PROTECT, related_name='child_donations')
     sponsorship_amount = models.FloatField()
     expiry_date = models.DateField(default=date.today().replace(year=date.today().year+1))
 
     def get_absolute_url(self):
         return reverse('donor:donation-detail', kwargs={'pk': self.pk})
     def __str__(self):
-        return 'Donor: ' + str(self.donor) + 'Child: ' + str(self.child) + 'Donation: ' + str(self.sponsorship_amount)
+        return 'Donor: ' + str(self.donor) + ' Child: ' + str(self.child) + ' Donation: ' + str(self.sponsorship_amount)

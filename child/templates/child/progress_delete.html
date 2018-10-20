@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+  <div class="col s12 m6 offset-m3">
+    <form action = '.' method='POST'>{% csrf_token %}
+      <h5 class= "grey-text">Do you want to remove the item: <label><strong>{{ object }} </strong></label><br> from {{ object.child }}'s progress info?</h5>
+      <br>
+      <p><input type="submit", value="Yes"/><a href="../">Cancel</a></p>
+    </form>
+  </div>
+</div>
+{% endblock %}

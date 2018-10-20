@@ -12,11 +12,11 @@
       <br>
       <!-- Dropdown Structure -->
       <ul id='dropdown1' class='dropdown-content grey-text'>
-        <li><a href="/donor/donation/?sponsorship_amount=25">$25</a></li>
-        <li><a href="#!">$50</a></li>
-        <li><a href="#!">$100</a></li>
-        <li><a href="#!">$500</a></li>
-        <li><a href="#!">$1000</a></li>
+        <li><a href="{% url 'donor:donation' %}?sponsorship_amount=25">$25</a></li>
+        <li><a href="{% url 'donor:donation' %}?sponsorship_amount=50">$50</a></li>
+        <li><a href="{% url 'donor:donation' %}?sponsorship_amount=100">$100</a></li>
+        <li><a href="{% url 'donor:donation' %}?sponsorship_amount=500">$500</a></li>
+        <li><a href="{% url 'donor:donation' %}?sponsorship_amount=1000">$1000</a></li>
       </ul>
     </div>
   </div>

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+  <!-- <ul class="collection with-header">
+    <li class="collection-item grey"><h4>Donor: </h4></li>
+    <li class="collection-item">Name: {{ object }}</li>
+    <li class="collection-item">Phone: {{ object.phone }}</li>
+    <li class="collection-item">Item 3</li>
+  </ul> -->
+  <div class="container">
+    <p>
+    <table class="striped responsive-table">
+      <thead>
+        <tr>
+            <th>Child Name:</th>
+            <th>{{ object.child }}</th>
+        </tr>
+        <tr>
+            <th>Project:</th>
+            <th>{{ object.child.project }}</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>Progress Made:</td>
+          <td>
+            <ul class="collection">
+              <li class="collection-item"><h6>Progress Date: {{ object.progress_date }}</h6></li>
+              {% if object.milestone != '' %}
+                <li class="collection-item">Milestone: {{ object.milestone }}</li>
+              {% endif %}
+              <li class="collection-item">{{ object.short_description }}</li>
+              {% if object.long_description != '' %}
+                <li class="collection-item">{{ object.long_description }}</li>
+              {% endif %}
+              <!-- <li class="collection-item">User: {{ object.project_owner_user.username }}</li> -->
+            </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </p>
+    <a class="waves-effect waves-light btn" href='{% url 'child:progress-update' object.child.pk object.pk %}'>Update</a>
+    <a class="waves-effect waves-light btn danger" href='{% url 'child:progress-delete' object.child.pk object.pk %}'>Delete</a>
+  </div>
+</div>
+
+
+{% endblock %}

@@ -7,7 +7,7 @@
   <div class="row">
 
 {% if object_list %}
-<div class="col s4">
+<div class="col s12 m4">
 
         <!-- <ul class="collection with-header">
           <li class="collection-item"><h4>Our Donors:</h4></li>
@@ -18,50 +18,49 @@
         <table class="highlight responsive-table">
             <thead>
               <tr>
-                  <th>Our Projects:</th>
+                  <th>Our Donors:</th>
               </tr>
             </thead>
 
             <tbody>
               {% for instance in object_list %}
               <tr>
-                <td><a href='{% url 'partner:partner-dashboard' project_pk=instance.pk %}'>{{ instance }} {{ instance.pk }} </a></td>
-                <td><a class = "btn success" href='{% url 'child:child-create' instance.pk %}'>Add a Child</a></td>
+                <td><a href='{% url 'donor:admin-donations-dashboard' donor_pk=instance.pk %}'>{{ instance }}</a></td>
+                <!-- <td><a class = "btn success" href='{% url 'child:child-create' instance.pk %}'>Add a Child</a></td> -->
               </tr>
               {% endfor %}
             </tbody>
 
           </table>
-          <br><br>
+          <!-- <br><br>
           <p>
             <a class="waves-effect waves-light btn large" href='{% url 'project:project-create' %}'>Add Project</a>
-          </p>
+          </p> -->
             </div>
     {% else %}
     <div class="col s6">
 
-      <h5 class= "grey-text">We currently do not have projects with active donors</h5>
-      <br><br>
+      <h5 class= "grey-text">Currently there are no donors</h5>
+      <!-- <br><br>
       <p>
         <a class="waves-effect waves-light btn large" href='{% url 'project:project-create' %}'>Add Project</a>
-      </p>
-        </div>
+      </p> -->
+    </div>
   {% endif %}
 
-{% if not request.user.is_staff and not request.user.is_superuser %}
 {% if object_list %}
-    <div class="col s3">
+    <div class="col s12 m5 offset-m2">
     <table class="highlight responsive-table">
       <thead>
         <tr>
-            <th>Our Children:</th>
+            <th>Donations from {{ donor }}:</th>
         </tr>
       </thead>
 
       <tbody>
-        {% for instance in child_list %}
+        {% for instance in donations_list %}
         <tr>
-          <td><a href='{{ instance.get_absolute_url }}'>{{ instance }}</a></td>
+          <td><a href='{{ instance.get_absolute_url }}'>{{ instance.child }} - ${{ instance.sponsorship_amount }}</a></td>
           <!-- <td><a href='{% url 'child:child-update' instance.pk %}'>Gender: {{ instance.gender }}</a></td> -->
           <!-- <td><a href='{% url 'child:child-update' instance.pk %}'>Age: {{ instance.age }}</a></td> -->
         </tr>
@@ -69,7 +68,7 @@
       </tbody>
     </table>
     </div>
-    <div class="col s3">
+    <!-- <div class="col s3">
     <table class="highlight responsive-table">
       <thead>
         <tr>
@@ -79,16 +78,14 @@
       <tbody>
         {% for instance in child_list %}
         <tr>
-          <!-- <td><a href='{{ instance.get_absolute_url }}'>{{ instance }}</a></td> -->
           <td><a href='{% url 'child:child-update' instance.pk %}'>Gender: {{ instance.gender }}</a></td>
           <td><a href='{% url 'child:child-update' instance.pk %}'>Age: {{ instance.age }}</a></td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
-    </div>
+    </div> -->
   </div>
-  {% endif %}
   {% endif %}
   </div> <!-- container ends here -->
 

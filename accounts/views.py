@@ -101,6 +101,9 @@ class SACLoginView(LoginView):
         elif self.request.user.groups.filter(name='donors').exists():
             print("user is in donors group")
             return reverse('donor:donor-index')
+        elif (self.request.user.is_superuser | self.request.user.is_staff):
+            return reverse('donor:admin-donations-dashboard')
+
         return super(SACLoginView, self).get_success_url(**kwargs)
 
 

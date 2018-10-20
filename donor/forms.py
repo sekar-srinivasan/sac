@@ -1,5 +1,6 @@
 from django import forms
 from .models import Donor, Donation
+from .choices import SPONSORSHIP_CHOICES
 
 class DonorForm(forms.ModelForm):
 
@@ -37,6 +38,8 @@ class DonorForm(forms.ModelForm):
         ]
 
 class DonationForm(forms.ModelForm):
+    sponsorship_amount    = forms.ChoiceField(choices=SPONSORSHIP_CHOICES)
+
     class Meta:
         model = Donation
         fields = [

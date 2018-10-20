@@ -4,7 +4,7 @@ from project.models import Project
 from child.models import Child
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
-from accounts.views import GroupRequiredMixin, PartnerGroupRequiredMixin
+from accounts.views import PartnerGroupRequiredMixin
 from django.views.generic import (
     ListView
 )
