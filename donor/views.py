@@ -9,6 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from accounts.views import RegistrationView, DonorsGroupRequiredMixin, AdminGroupRequiredMixin
 import random
 from datetime import date
+from django.utils.timezone import now
 from .models import Donor, Donation
 
 from django.views.generic import (
@@ -99,7 +100,8 @@ class DonationCreateView(LoginRequiredMixin, DonorsGroupRequiredMixin, CreateVie
         print(self.request.GET.get('next'))
         initial = super(DonationCreateView, self).get_initial()
         initial['sponsorship_amount'] = self.request.GET.get('sponsorship_amount')
-        initial['expiry_date'] = date.today().replace(year=date.today().year+1)
+        initial['expiry_date'] = now().replace(year=now().year+1)
+        # initial['expiry_date'] = date.today().replace(year=date.today().year+1)
         return initial
 
     def form_valid(self, form):

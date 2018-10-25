@@ -4,7 +4,6 @@ from django.conf import settings
 from django.db.models import Q
 from child.models import Child
 # from datetime import date
-from django.utils.timezone import now
 # Create your models here.
 
 class DonorQuerySet(models.QuerySet):
@@ -63,7 +62,7 @@ class Donation(models.Model):
     donor = models.ForeignKey(Donor, on_delete=models.PROTECT, related_name='donor_donations')
     child = models.ForeignKey(Child, on_delete=models.PROTECT, related_name='child_donations')
     sponsorship_amount = models.FloatField()
-    expiry_date = models.DateField(default=now().replace(year=now().year+1))
+    expiry_date = models.DateField()
     # expiry_date = models.DateField(default=date.today().replace(year=date.today().year+1))
 
     def get_absolute_url(self):

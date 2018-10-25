@@ -27,16 +27,16 @@
       <table class="striped responsive-table">
         <thead>
           <tr>
-              <th>Donor:</th>
-              <th>{{ object.donor }}</th>
+              <td>Donor:</td>
+              <td>{{ object.donor }}</td>
+          </tr>
+          <tr>
+            <th>Sponosored Child:</th>
+            <th>{{ object.child }}</th>
           </tr>
         </thead>
-
         <tbody>
-          <tr>
-            <td>Sponosored Child:</td>
-            <td>{{ object.child }}</td>
-          </tr>
+
           <tr>
             <td>From Project:</td>
             <td>{{ object.child.project }}</td>
