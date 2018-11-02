@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+
+  <div class="row">
+
+{% if object_list %}
+<div class="col s12 m4">
+
+        <!-- <ul class="collection with-header">
+          <li class="collection-item"><h4>Our Donors:</h4></li>
+          {% for instance in object_list %}
+          <li class="collection-item"><a href='{{instance.get_absolute_url}}'>{{ instance }} </a></li>
+          {% endfor %}
+        </ul> -->
+        <table class="highlight responsive-table">
+            <thead>
+              <tr>
+                  <th>My Donations:</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for instance in object_list %}
+              <tr>
+                <td><a href='{% url 'donor:donor-dashboard' child_pk=instance.child.pk %}'>{{ instance.child }} {{ instance.sponsorship_amount }} </a></td>
+                <!-- <td><a class = "btn success" href='{% url 'child:child-create' instance.pk %}'>Add a Child</a></td> -->
+              </tr>
+              {% endfor %}
+            </tbody>
+
+          </table>
+          <!-- <br><br>
+          <p>
+            <a class="waves-effect waves-light btn large" href='{% url 'project:project-create' %}'>Add Project</a>
+          </p>-->
+            </div>
+    {% else %}
+    <div class="col s12 m6">
+
+      <h5 class= "grey-text">Currently there are no donations</h5>
+      <!-- <br><br>
+      <p>
+        <a class="waves-effect waves-light btn large" href='{% url 'project:project-create' %}'>Add Project</a>
+      </p> -->
+    </div>
+  {% endif %}
+
+{% if not request.user.is_staff and not request.user.is_superuser %}
+{% if object_list %}
+    <div class="col s12 m5 offset-m2">
+    <table class="highlight responsive-table">
+      <thead>
+        <tr>
+            <th>Progress Report for {{ child }}:</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for instance in child_progress_list %}
+        <tr>
+          <td><a href='{{ instance.get_absolute_url }}'>{{ instance }}</a></td>
+          <!-- <td><a href='{% url 'child:child-update' instance.pk %}'>Gender: {{ instance.gender }}</a></td> -->
+          <!-- <td><a href='{% url 'child:child-update' instance.pk %}'>Age: {{ instance.age }}</a></td> -->
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    </div>
+    <!-- <div class="col s3">
+    <table class="highlight responsive-table">
+      <thead>
+        <tr>
+            <th> Gender/Age Info: </th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for instance in child_list %}
+        <tr>
+          <td><a href='{% url 'child:child-update' instance.pk %}'>Gender: {{ instance.gender }}</a></td>
+          <td><a href='{% url 'child:child-update' instance.pk %}'>Age: {{ instance.age }}</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    </div> -->
+  </div>
+  {% endif %}
+  {% endif %}
+
+
+  </div> <!-- container ends here -->
+    {% include 'donor/donation_choices_snippet.html' %}
+
+{% endblock %}
+
+
+<!--
+1. define an id for child list <table>
+  2. define id for each li element (gender and age) in the target list
+</table>
+
+
+  -->

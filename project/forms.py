@@ -3,17 +3,23 @@ from .models import Project
 
 class ProjectForm(forms.ModelForm):
 
-    name = forms.CharField(
-                                label='Project Name',
-                                widget=forms.TextInput(attrs={"cols": 20,
-                                                                "class": "active"})
-                                                                )
-    contact_name = forms.CharField(
-                                label='Contact Name',
-                                widget=forms.TextInput(attrs={"cols": 40})
+    # name = forms.CharField(
+    #                             label='Project Name',
+    #                             widget=forms.TextInput(attrs={"cols": 20,
+    #                                                             "class": "active"})
+    #                                                             )
+    # contact_name = forms.CharField(
+    #                             label='Contact Name',
+    #                             widget=forms.TextInput(attrs={"cols": 40})
+    #                             )
+    #
+    # contact_phone = forms.CharField()
+    image     = forms.ImageField(label='Project Image',
+                                required=False,
+                                error_messages = {'invalid':"Image files only"},
+                                # widget = MyClearableFileInput,
                                 )
 
-    contact_phone = forms.CharField()
     # description = forms.CharField(
     #                         widget=forms.Textarea(attrs={"placeholder": "Your Description Not Here",
     #                                                         "class": "new-class-name two",
@@ -40,4 +46,5 @@ class ProjectForm(forms.ModelForm):
             'location_addr_city',
             'location_addr_state',
             'location_addr_zip',
+            'image',
         ]

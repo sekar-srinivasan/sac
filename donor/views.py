@@ -62,24 +62,35 @@ class AdminDonationsDashboardView(LoginRequiredMixin, AdminGroupRequiredMixin, L
 
 class DonorDashboardView(LoginRequiredMixin, DonorsGroupRequiredMixin, ListView):
     template_name = 'donor/donor_dashboard.html'
+    queryset = None
     # group_required = [u'project_partners']
     def get_queryset(self, *args, **kwargs):
         print('user printed from DonorDashboardView is: ')
         print(self.request.user)
         print(self.kwargs)
         print(self.args)
+        def user_has_donor_profile(self):
+            has_donor = False
+            try:
+                has_donor = (self.request.user.donor is not None)
+            except Donor.DoesNotExist:
+                pass
+            return has_donor
         # queryset = Child.objects.filter(created_by__id__iexact=self.request.user.id)
         if (self.request.user.is_superuser | self.request.user.is_staff):
             queryset = Donation.objects.all()
-        else:
+        elif user_has_donor_profile(self):
             queryset = self.request.user.donor.donor_donations.all()
+        else:
+            queryset = None
         return queryset
 
     def get_context_data(self, *args, **kwargs):
         context = super(DonorDashboardView, self).get_context_data(*args, **kwargs)
         queryset = self.get_queryset(*args, **kwargs)
-        print(queryset.exists())
-        if queryset.exists():
+        # print(queryset.exists())
+        # if queryset.exists():
+        if queryset is not None:
             child_pk = self.kwargs.get('child_pk', self.get_queryset(*args, **kwargs).first().child.pk)
             child = Child.objects.get(pk=child_pk)
             context['child'] = child
@@ -207,6 +218,9 @@ class DonorCreateView(LoginRequiredMixin, DonorsGroupRequiredMixin, CreateView):
         instance = form.save(commit=False)
         #like a pre_save
         instance.donor_user=self.request.user
+        instance.first_name=self.request.user.first_name
+        instance.last_name=self.request.user.last_name
+        instance.email=self.request.user.email
         print('Inside DonorCreateView - form_valid, GET next is:')
         print(self.request.GET.get('next'))
         print('Inside DonorCreateView - form_valid, POST next is:')

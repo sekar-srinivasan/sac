@@ -34,6 +34,7 @@ class PartnerView(LoginRequiredMixin, PartnerGroupRequiredMixin, ListView):
             project_pk = self.kwargs.get('project_pk', self.get_queryset(*args, **kwargs).first().pk)
             print(self.kwargs)
             print(project_pk)
+            context['project'] = self.get_queryset(*args, **kwargs).get(pk=project_pk)
             context['child_list'] = self.get_queryset(*args, **kwargs).get(pk=project_pk).project_children.all()
         # context['child_list'] = self.request.user.partner_user_children.all()
         # context['project_list'] = self.request.user.project_set.all()

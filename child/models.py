@@ -5,6 +5,7 @@ from django.conf import settings
 from .choices import GENDER_CHOICES
 from datetime import date
 from django.utils.timezone import now
+from PIL import Image
 
 
 # Create your models here.
@@ -16,6 +17,7 @@ class Child(models.Model):
     last_name = models.CharField(max_length=100)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     age = models.PositiveIntegerField()
+    image = models.ImageField(blank = True, default = 'child_pics/happy_apna_skool_kid.jpg', upload_to='child_pics')
 
     def __str__(self):
         return self.first_name + ' ' + self.last_name
@@ -24,6 +26,14 @@ class Child(models.Model):
             verbose_name_plural = "Children"
     def get_absolute_url(self):
         return reverse('child:child-detail', kwargs={'pk': self.pk})
+
+    def save(self):
+        super().save()
+        img = Image.open(self.image.path)
+        if img.width>300 or img.height>300:
+            output_size = (300, 300)
+            img.thumbnail(output_size)
+            img.save(self.image.path)
 
 class Progress(models.Model):
     child = models.ForeignKey(Child, on_delete=models.PROTECT)

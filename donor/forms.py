@@ -4,15 +4,15 @@ from .choices import SPONSORSHIP_CHOICES
 
 class DonorForm(forms.ModelForm):
 
-    first_name = forms.CharField(
-                                label='First Name',
-                                widget=forms.TextInput(attrs={"cols": 20,
-                                                                "class": "active"})
-                                                                )
-    last_name = forms.CharField(
-                                label='Last Name',
-                                widget=forms.TextInput(attrs={"cols": 40})
-                                )
+    # first_name = forms.CharField(
+    #                             label='First Name',
+    #                             widget=forms.TextInput(attrs={"cols": 20,
+    #                                                             "class": "active"})
+    #                                                             )
+    # last_name = forms.CharField(
+    #                             label='Last Name',
+    #                             widget=forms.TextInput(attrs={"cols": 40})
+    #                             )
 
     phone = forms.CharField()
     # description = forms.CharField(
@@ -27,10 +27,7 @@ class DonorForm(forms.ModelForm):
     class Meta:
         model = Donor
         fields = [
-            'first_name',
-            'last_name',
             'phone',
-            'email',
             'addr_street',
             'addr_apt',
             'addr_city',

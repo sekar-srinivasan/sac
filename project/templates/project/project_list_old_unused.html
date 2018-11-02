@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+  {% if object_list %}
+    <!-- <ul class="collection with-header">
+      <li class="collection-item"><h4>Our Donors:</h4></li>
+      {% for instance in object_list %}
+      <li class="collection-item"><a href='{{instance.get_absolute_url}}'>{{ instance }} </a></li>
+      {% endfor %}
+    </ul> -->
+    <div class="container">
+      <div class="container">
+        <div class="container">
+      <table class="highlight responsive-table">
+        <thead>
+          <tr>
+              <th>Our Projects:</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for instance in object_list %}
+          <tr>
+            <td><a href='{{instance.get_absolute_url}}'>{{ instance }} </a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+
+      </table>
+      </div>
+      </div>
+    </div>
+  {% else %}
+  <div class="col s6">
+
+    <h5 class= "grey-text">We currently do not have projects with active donors</h5>
+    <br><br>
+    <p>
+      <a class="waves-effect waves-light btn large" href='{% url 'project:project-create' %}'>Add Project</a>
+    </p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

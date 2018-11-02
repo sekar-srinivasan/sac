@@ -5,6 +5,11 @@
     <span class="card-title grey-text"><h4>Enter Donor Details...</h4></span>
     </div>
     <div class="card-content">
+    <p class = "grey-text">
+      First Name: {{ request.user.first_name }} <br>
+      Last Name: {{ request.user.last_name }} <br>
+      Email: {{ request.user.email }}
+    </p>
     {% include 'snippets/form_snippet.html' %}
     </div>
 

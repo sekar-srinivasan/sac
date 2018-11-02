@@ -38,7 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    #own
+    #crisp forms related apps
+    # 'materialize',
+    'crispy_forms',
+    'crispy_forms_materialize',
+
+    #own apps
     'donor',
     'project',
     'search',
@@ -141,7 +146,17 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
+    os.path.join(BASE_DIR, 'static'),
     # '/var/www/static/',
 ]
 print(STATICFILES_DIRS)
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 1025
+
+# Default layout to use with "crispy_forms"
+CRISPY_TEMPLATE_PACK = 'materialize_css_forms'

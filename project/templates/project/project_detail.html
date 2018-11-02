@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load group_check %}
 
 {% block content %}
 
@@ -45,11 +46,11 @@
         {% endif %}
       </tbody>
     </table>
-
-    {% if request.user.is_staff or request.user.is_superuser %}
+    {% if request.user.is_staff or request.user.is_superuser or request.user|belongs_to_group:"project_partners" %}
     <p>
+      <a class="waves-effect waves-light btn" href='{% url 'project:project-list' %}'>Projects</a>
       <a class="waves-effect waves-light btn right" href='{% url 'project:project-update' object.pk %}'>Update</a>
-      <a class="waves-effect waves-light btn red right" href='{% url 'project:project-delete' object.pk %}'>Delete</a>
+      <a class="waves-effect waves-light btn white grey-text right" href='{% url 'project:project-delete' object.pk %}'>Delete</a>
     </p>
     {% endif %}
   </div>

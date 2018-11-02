@@ -7,6 +7,7 @@ from django.views.generic.edit import FormView
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.core.exceptions import PermissionDenied
+from accounts.forms import RegistrationForm
 # Create your views here.
 
 
@@ -108,7 +109,7 @@ class SACLoginView(LoginView):
 
 
 class RegistrationView(FormView):
-    form_class = UserCreationForm
+    form_class = RegistrationForm
     template_name = 'registration/register.html'
     username = ''
     user = User()

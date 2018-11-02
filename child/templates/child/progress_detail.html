@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load group_check %}
 {% block content %}
 
 <div class="container">
@@ -43,8 +43,10 @@
       </tbody>
     </table>
   </p>
+  {% if request.user.is_staff or request.user.is_superuser or request.user|belongs_to_group:"project_partners" %}
     <a class="waves-effect waves-light btn" href='{% url 'child:progress-update' object.child.pk object.pk %}'>Update</a>
-    <a class="waves-effect waves-light btn danger" href='{% url 'child:progress-delete' object.child.pk object.pk %}'>Delete</a>
+    <a class="waves-effect waves-light btn white grey-text" href='{% url 'child:progress-delete' object.child.pk object.pk %}'>Delete</a>
+  {% endif %}
   </div>
 </div>
 

@@ -2,6 +2,8 @@ from django.db import models
 from django.urls import reverse
 from django.conf import settings
 from django.db.models import Q
+from PIL import Image
+import os
 
 # Create your models here.
 
@@ -38,6 +40,7 @@ class Project(models.Model):
     location_addr_city = models.CharField(blank=True, max_length=50)
     location_addr_state = models.CharField(blank=True, max_length=100)
     location_addr_zip = models.CharField(blank=True, max_length=6)
+    image = models.ImageField(blank = True, default = 'child_pics/happy_apna_skool_kid.jpg', upload_to='project_pics')
 
     objects = ProjectManager()
 
@@ -46,3 +49,15 @@ class Project(models.Model):
 
     def get_absolute_url(self):
         return reverse('project:project-detail', kwargs={'pk': self.pk})
+
+    def save(self):
+        super().save()
+        img = Image.open(self.image.path)
+        try:
+            thumbnail_size = (300, 300)
+            img.thumbnail(thumbnail_size)
+            f, e = os.path.splitext(self.image.path)
+            thumbnail_img = f + ".thumbnail"
+            img.save(thumbnail_img, 'JPEG')
+        except IOError:
+            print("cannot create thumbnail for", img)
