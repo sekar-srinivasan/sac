@@ -81,6 +81,13 @@ class DonorDashboardView(LoginRequiredMixin, DonorsGroupRequiredMixin, ListView)
             queryset = Donation.objects.all()
         elif user_has_donor_profile(self):
             queryset = self.request.user.donor.donor_donations.all()
+            print("user has donor profile. queryset is:")
+            print(queryset.all())
+            print("user has donor profile. queryset first is:")
+            print(queryset.first())
+            print("user has donor profile. queryset first is None?:")
+            print(queryset.first() is None)
+
         else:
             queryset = None
         return queryset
@@ -90,11 +97,14 @@ class DonorDashboardView(LoginRequiredMixin, DonorsGroupRequiredMixin, ListView)
         queryset = self.get_queryset(*args, **kwargs)
         # print(queryset.exists())
         # if queryset.exists():
+        print("queryset first")
+        print(queryset.all())
         if queryset is not None:
-            child_pk = self.kwargs.get('child_pk', self.get_queryset(*args, **kwargs).first().child.pk)
-            child = Child.objects.get(pk=child_pk)
-            context['child'] = child
-            context['child_progress_list'] = child.progress_set.all()
+            if queryset.first() is not None:
+                child_pk = self.kwargs.get('child_pk', self.get_queryset(*args, **kwargs).first().child.pk)
+                child = Child.objects.get(pk=child_pk)
+                context['child'] = child
+                context['child_progress_list'] = child.progress_set.all()
         return context
 
 class DonationCreateView(LoginRequiredMixin, DonorsGroupRequiredMixin, CreateView):

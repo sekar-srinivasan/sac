@@ -12,7 +12,8 @@ class ProjectQuerySet(models.QuerySet):
         qs = self
         if query is not None:
             or_lookup =     (Q(name__icontains=query) |
-                             Q(contact_name__icontains=query)
+                             Q(contact_first_name__icontains=query)|
+                             Q(contact_last_name__icontains=query)
                             )
             qs = qs.filter(or_lookup).distinct()
         return qs
@@ -27,7 +28,8 @@ User = settings.AUTH_USER_MODEL
 class Project(models.Model):
     project_partner_user = models.ForeignKey(User, on_delete=models.PROTECT)
     name = models.CharField(max_length=250)
-    contact_name = models.CharField(max_length=250)
+    contact_first_name = models.CharField(max_length=250)
+    contact_last_name = models.CharField(max_length=250)
     contact_phone = models.CharField(blank=True, max_length=20)
     contact_email = models.EmailField(blank=True, max_length=100)
     contact_addr_street = models.CharField(blank=True, max_length=250)
@@ -40,7 +42,7 @@ class Project(models.Model):
     location_addr_city = models.CharField(blank=True, max_length=50)
     location_addr_state = models.CharField(blank=True, max_length=100)
     location_addr_zip = models.CharField(blank=True, max_length=6)
-    image = models.ImageField(blank = True, default = 'child_pics/happy_apna_skool_kid.jpg', upload_to='project_pics')
+    image = models.ImageField(blank = True, default = 'project_pics/india.gif', upload_to='project_pics')
 
     objects = ProjectManager()
 

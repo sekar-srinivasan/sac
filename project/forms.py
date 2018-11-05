@@ -8,8 +8,8 @@ class ProjectForm(forms.ModelForm):
     #                             widget=forms.TextInput(attrs={"cols": 20,
     #                                                             "class": "active"})
     #                                                             )
-    # contact_name = forms.CharField(
-    #                             label='Contact Name',
+    # contact_first_name = forms.CharField(
+    #                             label='Contact First Name',
     #                             widget=forms.TextInput(attrs={"cols": 40})
     #                             )
     #
@@ -33,7 +33,8 @@ class ProjectForm(forms.ModelForm):
         model = Project
         fields = [
             'name',
-            'contact_name',
+            'contact_first_name',
+            'contact_last_name',
             'contact_phone',
             'contact_email',
             'contact_addr_street',

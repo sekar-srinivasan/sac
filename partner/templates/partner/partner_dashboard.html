@@ -36,10 +36,12 @@
       {% endif %}
       {% if not request.user.is_staff and not request.user.is_superuser %}
         {% if object_list %}
-          <div class="col s8">
+          <div class="col s8 green lighten-5">
             <div class="row">
               <h5 class="center grey-text">{{ project }}</h5>
               <h5 class="center grey-text">Our Children</h5>
+            </div>
+            <div class="row">
               <div class="cards-container">
                 {% for instance in child_list %}
                   <div class="col s12 m4">
