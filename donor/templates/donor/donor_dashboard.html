@@ -51,17 +51,24 @@
   </div>
 
       {% if object_list %}
-        <div class="col s12 m5 offset-m2 green lighten-5">
-          <table class="highlight responsive-table">
+        <div class="col s12 m5 offset-m2">
+          <div class="row">
+            <div class="col s12">
+               <h5 class="center grey-text">Progress Report</h5>
+             </div>
+          </div>
+          <table class="highlight responsive-table green lighten-5">
             <thead>
               <tr>
-                  <th class="center grey-text"><h5>Progress Report</h5><br><h6>{{ child }}</h6></th>
+                  <!-- <th class="center grey-text"><h5>Progress Report</h5><br> -->
+
+                    <th class="center grey-text"><br><h6 >{{ child }}</h6><br></th>
               </tr>
               <!-- <tr>
                   <th class="center grey-text"><h5>{{ child }}</h5></th>
               </tr> -->
             </thead>
-            <tbody>
+            <tbody class="green lighten-5">
               {% for instance in child_progress_list %}
               <tr>
                 <td class="center grey-text"><a href='{{ instance.get_absolute_url }}'>{{ instance }}</a></td>
