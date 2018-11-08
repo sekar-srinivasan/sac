@@ -2,11 +2,12 @@ from django.shortcuts import render, redirect
 from django.utils.http import urlencode
 from django.contrib import messages
 from child.models import Child
+from project.models import Project
 from .forms import DonorForm, DonationForm
 from django.urls import reverse
 from django.contrib.auth.models import Group
 from django.contrib.auth.mixins import LoginRequiredMixin
-from accounts.views import RegistrationView, DonorsGroupRequiredMixin, AdminGroupRequiredMixin
+from accounts.views import RegistrationView, DonorsGroupRequiredMixin, AdminGroupRequiredMixin, CustomLoginRequiredMixin
 import random
 from datetime import date
 from django.utils.timezone import now
@@ -65,10 +66,6 @@ class DonorDashboardView(LoginRequiredMixin, DonorsGroupRequiredMixin, ListView)
     queryset = None
     # group_required = [u'project_partners']
     def get_queryset(self, *args, **kwargs):
-        print('user printed from DonorDashboardView is: ')
-        print(self.request.user)
-        print(self.kwargs)
-        print(self.args)
         def user_has_donor_profile(self):
             has_donor = False
             try:
@@ -81,13 +78,6 @@ class DonorDashboardView(LoginRequiredMixin, DonorsGroupRequiredMixin, ListView)
             queryset = Donation.objects.all()
         elif user_has_donor_profile(self):
             queryset = self.request.user.donor.donor_donations.all()
-            print("user has donor profile. queryset is:")
-            print(queryset.all())
-            print("user has donor profile. queryset first is:")
-            print(queryset.first())
-            print("user has donor profile. queryset first is None?:")
-            print(queryset.first() is None)
-
         else:
             queryset = None
         return queryset
@@ -95,10 +85,6 @@ class DonorDashboardView(LoginRequiredMixin, DonorsGroupRequiredMixin, ListView)
     def get_context_data(self, *args, **kwargs):
         context = super(DonorDashboardView, self).get_context_data(*args, **kwargs)
         queryset = self.get_queryset(*args, **kwargs)
-        # print(queryset.exists())
-        # if queryset.exists():
-        print("queryset first")
-        print(queryset.all())
         if queryset is not None:
             if queryset.first() is not None:
                 child_pk = self.kwargs.get('child_pk', self.get_queryset(*args, **kwargs).first().child.pk)
@@ -107,7 +93,7 @@ class DonorDashboardView(LoginRequiredMixin, DonorsGroupRequiredMixin, ListView)
                 context['child_progress_list'] = child.progress_set.all()
         return context
 
-class DonationCreateView(LoginRequiredMixin, DonorsGroupRequiredMixin, CreateView):
+class DonationCreateView(CustomLoginRequiredMixin, DonorsGroupRequiredMixin, CreateView):
     template_name = 'donor/donation_create.html'
     form_class = DonationForm
     group_required = [u'donors']
@@ -120,7 +106,8 @@ class DonationCreateView(LoginRequiredMixin, DonorsGroupRequiredMixin, CreateVie
         print("GET next is:")
         print(self.request.GET.get('next'))
         initial = super(DonationCreateView, self).get_initial()
-        initial['sponsorship_amount'] = self.request.GET.get('sponsorship_amount')
+        initial['sponsorship_amount'] = self.request.session.get('sponsorship_amount', 50)
+        # initial['sponsorship_amount'] = self.request.GET.get('sponsorship_amount')
         initial['expiry_date'] = now().replace(year=now().year+1)
         # initial['expiry_date'] = date.today().replace(year=date.today().year+1)
         return initial
@@ -134,6 +121,9 @@ class DonationCreateView(LoginRequiredMixin, DonorsGroupRequiredMixin, CreateVie
         print(self.request.POST)
         print("POST sponsorship_amount is:")
         print(self.request.POST.get('sponsorship_amount'))
+        self.request.session['sponsorship_amount'] = self.request.POST.get('sponsorship_amount')
+        print(self.request.session.keys())
+        print(self.request.session.items())
         instance.donor=self.request.user.donor
         def child_table_not_empty(self):
             has_child = False
@@ -181,6 +171,70 @@ class DonationCreateView(LoginRequiredMixin, DonorsGroupRequiredMixin, CreateVie
         print("DonationCreateView: Inside render_to_response after")
         # next='/donor/donation?sponsorship_amount=25'
         return super(DonationCreateView, self).render_to_response(context)
+
+class DonationWithinProjectCreateView(DonationCreateView):
+
+    def form_valid(self, form):
+        instance = form.save(commit=False)
+        #like a pre_save
+        print("DonationWithinProjectCreateView:Inside form_valid")
+        print(self.request.user.donor)
+        print("POST data:")
+        print(self.request.POST)
+        print("POST sponsorship_amount is:")
+        print(self.request.POST.get('sponsorship_amount'))
+        instance.donor=self.request.user.donor
+        project = None
+        try:
+            project = Project.objects.get(pk=self.kwargs['project_pk'])
+        except Project.DoesNotExist:
+            messages.error(self.request, "This is not a valid project. Please click on <label> PROJECTS </label> and pick a project to sponsor.")
+        def child_exists(self):
+            has_child = False
+            try:
+                has_child = (project.project_children.exists())
+            except Child.DoesNotExist:
+                messages.error(self.request, "There are no children needing sponsorship at this time. Please click on <label> PROJECTS </label> and pick another project to sponsor.")
+            return has_child
+        if child_exists(self):
+            print("This project has at least one child")
+            instance.child = project.project_children.get(pk=random.randint(1,project.project_children.last().pk))
+            return super(DonationWithinProjectCreateView, self).form_valid(form)
+        else:
+            messages.error(self.request, "Oops!! There are no children in this project at this time. Please click on <label> CONTACT </label> to send us a message.")
+            # Future enhancement: override form_invalid to perform error handling for empty child table scenario
+            return super(DonationWithinProjectCreateView, self).form_invalid(form)
+        # instance.save()
+        # like a post_save. instance.save() is not needed as we are going to call form_valid again below ehich does the save() and more...
+
+
+    def render_to_response(self, context):
+        def user_has_donor_profile(self):
+            has_donor = False
+            try:
+                has_donor = (self.request.user.donor is not None)
+            except Donor.DoesNotExist:
+                pass
+            return has_donor
+        print("DonationWithinProjectCreateView: Inside render_to_response before")
+        print(self.request.path)
+        print("GET next is:")
+        print(self.request.GET.get('next'))
+        print(self.request.GET.get('sponsorship_amount'))
+        print("POST next is:")
+        print(self.request.POST.get('next'))
+        print(self.request.POST.get('sponsorship_amount'))
+        if not user_has_donor_profile(self):
+            path = reverse('donor:donor-create') #kwargs={'project_pk': self.kwargs['project_pk']}
+            next_url = reverse('donor:donation-within-project', kwargs={'project_pk': self.kwargs['project_pk']}) + '?sponsorship_amount=' + self.request.GET.get('sponsorship_amount')
+            print("next_url is: %s", next_url)
+            params = urlencode({'next': next_url})
+            url = "%s?%s" % (path, params)
+            print(url)
+            return redirect(url)
+        print("DonationWithinProjectCreateView: Inside render_to_response after")
+        # next='/donor/donation?sponsorship_amount=25'
+        return super(DonationWithinProjectCreateView, self).render_to_response(context)
 
 class DonationDetailView(LoginRequiredMixin, DonorsGroupRequiredMixin, DetailView):
     template_name = 'donor/donation_detail.html'
@@ -253,7 +307,7 @@ class DonorCreateView(LoginRequiredMixin, DonorsGroupRequiredMixin, CreateView):
         print('Inside DonorCreateView - get_success_url, GET is:')
         print(self.request.GET.get('next'))
         print('Inside DonorCreateView - get_success_url, POST is:')
-        POST_next = self.request.POST.get('next')
+        POST_next = self.request.POST.get('next').strip()
         def post_param_next_is_empty():
             print("inside post_param_next_is_empty function")
             print('POST_next:')
@@ -269,7 +323,8 @@ class DonorCreateView(LoginRequiredMixin, DonorsGroupRequiredMixin, CreateView):
         print("post_param_next_is_empty:")
         print(post_param_next_is_empty())
         # if not post_param_next_is_empty():
-        if POST_next.strip():
+        if POST_next:
+            print('sponsorship_amount is being set to 25 inside DonorCreateView: get_success_url')
             return '/donor/donation?sponsorship_amount=25'
         return super(DonorCreateView, self).get_success_url()
 

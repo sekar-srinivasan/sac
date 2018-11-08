@@ -18,22 +18,24 @@
           {% for instance in object_list %}
             <div class="row">
               <div class="col s12">
-               <div class="card">
-                 <div class="card-image">
-                   <a href='{% url 'donor:donor-dashboard' child_pk=instance.child.pk %}'>
-                     <img src={% if instance.child.image.size is not None %} '{{ instance.child.image.url }}' {% else %} '{{ instance.child.image }}' {% endif %}>
-                   </a>
-                 </div>
-                 <div class="card-content">
+                <a href='{% url 'donor:donor-dashboard' child_pk=instance.child.pk %}'>
+               <div class="card hoverable z-depth-1">
+                 <div class="card-content center">
                    <p><a href='{% url 'donor:donor-dashboard' child_pk=instance.child.pk %}'>Child: {{ instance.child }}</a></p>
-                   <p><a href='{% url 'donor:donor-dashboard' child_pk=instance.child.pk %}'>Project: {{ instance.child.project }}</a></p>
-                   <p><a href='{% url 'donor:donor-dashboard' child_pk=instance.child.pk %}'>Spnosorship: {{ instance.sponsorship_amount }}</a></p>
                  </div>
-                 <div class="card-action">
+                 <div class="card-image">
+                     <img src={% if instance.child.image.size is not None %} '{{ instance.child.image.url }}' {% else %} '{{ instance.child.image }}' {% endif %}>
+                 </div>
+                 <div class="card-content center">
+                   <p><a href='{% url 'project:project-detail' pk=instance.child.project.pk %}'>Project: {{ instance.child.project }}</a></p>
+                   <p><a href='{% url 'donor:donation-detail' pk=instance.pk %}'>Spnosorship: {{ instance.sponsorship_amount }}</a></p>
+                 </div>
+                 <!-- <div class="card-action">
                    <a href="#">This is a link</a>
                    <a href="#">This is a link</a>
-                 </div>
+                 </div> -->
                </div>
+                </a>
               </div>
             </div>
           {% endfor %}

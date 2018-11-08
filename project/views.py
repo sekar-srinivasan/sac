@@ -75,12 +75,19 @@ class ProjectCreateView(LoginRequiredMixin, PartnerGroupRequiredMixin, CreateVie
 class ProjectDetailView(DetailView):
     template_name = 'project/project_detail.html'
     queryset = Project.objects.all()
-    # def get_queryset(self):
-    #     return Project.objects.filter(owner=self.request.user)
 
 class ProjectListView(ListView):
     template_name = 'project/project_list.html'
-    queryset = Project.objects.all()
+    # queryset = Project.objects.all()
+    def get_queryset(self):
+        print("Inside ProjectListView:get_queryset")
+        print(self.request.session.items())
+        print(self.request.GET.get('sponsorship_amount'))
+        if self.request.GET.get('sponsorship_amount'):
+            self.request.session['sponsorship_amount'] = self.request.GET.get('sponsorship_amount')
+        print(self.request.session.items())
+        return Project.objects.all()
+        # return Project.objects.filter(owner=self.request.user)
 
 class ProjectUpdateView(LoginRequiredMixin, AdminGroupRequiredMixin, UpdateView):
     template_name = 'project/project_create.html'

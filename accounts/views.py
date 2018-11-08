@@ -8,8 +8,18 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 from accounts.forms import RegistrationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 
+class CustomLoginRequiredMixin(LoginRequiredMixin):
+    def dispatch(self, request, *args, **kwargs):
+        print("Inside CustomLoginRequiredMixin")
+        print(self.request.session.items())
+        print(self.request.GET.get('sponsorship_amount'))
+        if self.request.GET.get('sponsorship_amount'):
+            self.request.session['sponsorship_amount'] = self.request.GET.get('sponsorship_amount')
+        print(self.request.session.items())
+        return super(CustomLoginRequiredMixin, self).dispatch(request, *args, **kwargs)
 
 class GroupRequiredMixin(object):
     """
@@ -93,15 +103,19 @@ class DonorsGroupRequiredMixin(GroupRequiredMixin):
 class SACLoginView(LoginView):
     def get_success_url(self, **kwargs):
         print('Inside SACLoginView: get_success_url:')
-        print('does the user belong to project_partners group?')
-        print(self.request.user)
-        print(self.request.user.groups.filter(name='project_partners').exists())
         if self.request.user.groups.filter(name='project_partners').exists():
             print("user is in project_partners group")
             return reverse('partner:partner-dashboard')
         elif self.request.user.groups.filter(name='donors').exists():
-            print("user is in donors group")
-            return reverse('donor:donor-index')
+            print("Inside SACLoginView, user is in donors group")
+            print(self.request.session.items())
+            if 'sponsorship_amount' in self.request.session:
+                if 'project_pk' in self.request.session:
+                    return reverse('donor:donation-within-project', kwargs={'project_pk': self.request.session['project_pk']})
+                else:
+                    return reverse('donor:donation')
+            else:
+                return reverse('donor:donor-index')
         elif (self.request.user.is_superuser | self.request.user.is_staff):
             return reverse('donor:admin-donations-dashboard')
 

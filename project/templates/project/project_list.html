@@ -3,17 +3,19 @@
 {% block content %}
   <div class="container">
     {% if object_list %}
-    <div class="col s8">
+      <h5 class="center grey-text">Our Projects</h5>
       <div class="row">
         <div class="cards-container">
           {% for instance in object_list %}
             <div class="col s12 m4">
-             <div class="card z-depth-0">
+             <div class="card hoverable z-depth-1">
                <div class="card-content center grey-text">
-                 <p>{{ instance }}</p>
+                 <p>{{ instance }} <a href='{% url 'donor:donation-within-project' instance.pk %}'class="right orange-text"><i class="material-icons small">person_add</i></a></p>
+
                </div>
                <div class="card-image">
                  <img src={% if instance.image.size is not None %} '{{ instance.image.url }}' {% else %} '{{ instance.image }}' {% endif %}>
+
                </div>
                <div class="card-content center grey-text">
                  <p><a class="grey-text" href='{% url 'project:project-detail' instance.pk %}'> {{ instance.contact_addr_city }}, &nbsp; {{ instance.contact_addr_state }}</a></p>
@@ -26,7 +28,6 @@
           {% endfor %}
         </div>
       </div>
-    </div>
     {% else %}
       <div class="col s6">
         <h5 class= "grey-text">We currently do not have projects with active donors</h5>

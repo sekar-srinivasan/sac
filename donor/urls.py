@@ -12,6 +12,7 @@ from .views import(
     DonationDetailView,
     DonorDashboardView,
     AdminDonationsDashboardView,
+    DonationWithinProjectCreateView,
 )
 
 app_name = 'donor'
@@ -23,6 +24,7 @@ urlpatterns = [
     path('', DonorIndexView.as_view(), name='donor-index'),
     # path('donor-home/', DonorTemplateView.as_view(), name='donor-home'),
     path('donation/', DonationCreateView.as_view(), name='donation'),
+    path('donation-within-project/<int:project_pk>', DonationWithinProjectCreateView.as_view(), name='donation-within-project'),
     path('donation/<int:pk>/', DonationDetailView.as_view(), name='donation-detail'),
     path('<int:pk>/update/', DonorUpdateView.as_view(), name='donor-update'),
     path('<int:pk>/delete/', DonorDeleteView.as_view(), name='donor-delete'),
