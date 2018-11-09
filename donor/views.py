@@ -236,6 +236,49 @@ class DonationWithinProjectCreateView(DonationCreateView):
         # next='/donor/donation?sponsorship_amount=25'
         return super(DonationWithinProjectCreateView, self).render_to_response(context)
 
+class DonationToSpecificChildCreateView(DonationCreateView):
+
+    def form_valid(self, form):
+        instance = form.save(commit=False)
+        #like a pre_save
+        print("DonationToSpecificChildCreateView:Inside form_valid")
+        print(self.request.user.donor)
+        print("POST data:")
+        print(self.request.POST)
+        print("POST sponsorship_amount is:")
+        print(self.request.POST.get('sponsorship_amount'))
+        instance.donor=self.request.user.donor
+        instance.child = Child.objects.get(pk=self.kwargs['child_pk'])
+        return super(DonationToSpecificChildCreateView, self).form_valid(form)
+
+    def render_to_response(self, context):
+        def user_has_donor_profile(self):
+            has_donor = False
+            try:
+                has_donor = (self.request.user.donor is not None)
+            except Donor.DoesNotExist:
+                pass
+            return has_donor
+        print("DonationToSpecificChildCreateView: Inside render_to_response before")
+        print(self.request.path)
+        print("GET next is:")
+        print(self.request.GET.get('next'))
+        print(self.request.GET.get('sponsorship_amount'))
+        print("POST next is:")
+        print(self.request.POST.get('next'))
+        print(self.request.POST.get('sponsorship_amount'))
+        if not user_has_donor_profile(self):
+            path = reverse('donor:donor-create') #kwargs={'project_pk': self.kwargs['project_pk']}
+            next_url = reverse('donor:donation-to-specific-child', kwargs={'child_pk': self.kwargs['child_pk']}) + '?sponsorship_amount=' + self.request.GET.get('sponsorship_amount')
+            print("next_url is: %s", next_url)
+            params = urlencode({'next': next_url})
+            url = "%s?%s" % (path, params)
+            print(url)
+            return redirect(url)
+        print("DonationToSpecificChildCreateView: Inside render_to_response after")
+        # next='/donor/donation?sponsorship_amount=25'
+        return super(DonationToSpecificChildCreateView, self).render_to_response(context)
+
 class DonationDetailView(LoginRequiredMixin, DonorsGroupRequiredMixin, DetailView):
     template_name = 'donor/donation_detail.html'
     queryset = Donation.objects.all()

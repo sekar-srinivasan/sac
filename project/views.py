@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Project
+from django.contrib import messages
 from .forms import ProjectForm
 from django.urls import reverse
 from django.contrib.auth.models import Group, Permission
@@ -84,6 +85,7 @@ class ProjectListView(ListView):
         print(self.request.session.items())
         print(self.request.GET.get('sponsorship_amount'))
         if self.request.GET.get('sponsorship_amount'):
+            messages.info(self.request, "You have chosen to sponsor $" + self.request.GET.get('sponsorship_amount') + ". Please select a project to sponsor a child within the project.")
             self.request.session['sponsorship_amount'] = self.request.GET.get('sponsorship_amount')
         print(self.request.session.items())
         return Project.objects.all()

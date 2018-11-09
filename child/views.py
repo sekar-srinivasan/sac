@@ -17,6 +17,30 @@ from django.views.generic import (
 
 # Create your views here.
 
+class ChildSelectionDashboardView(ListView):
+    template_name = 'child/child_selection_dashboard.html'
+    # queryset = Project.objects.all()
+    def get_queryset(self):
+        print("Inside ChildSelectionDashboardView:get_queryset")
+        print(self.request.session.items())
+        print(self.request.GET.get('sponsorship_amount'))
+        if self.request.GET.get('sponsorship_amount'):
+            self.request.session['sponsorship_amount'] = self.request.GET.get('sponsorship_amount')
+        print(self.request.session.items())
+        return Project.objects.all()
+        # return Project.objects.filter(owner=self.request.user)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(ChildSelectionDashboardView, self).get_context_data(*args, **kwargs)
+        queryset = self.get_queryset(*args, **kwargs)
+        if queryset is not None:
+            if queryset.first() is not None:
+                project_pk = self.kwargs.get('project_pk', self.get_queryset(*args, **kwargs).first().pk)
+                project = Project.objects.get(pk=project_pk)
+                context['project'] = project
+                context['project_children'] = project.project_children.all()
+        return context
+
 class ChildCreateView(LoginRequiredMixin, PartnerGroupRequiredMixin, CreateView):
     template_name = 'child/child_create.html'
     form_class = ChildForm

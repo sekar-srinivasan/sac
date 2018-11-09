@@ -3,7 +3,15 @@
 {% block content %}
   <div class="container">
     {% if object_list %}
-      <h5 class="center grey-text">Our Projects</h5>
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li class="{{ message.tags }}  center grey-text">{{ message|safe }}</li>
+        {% endfor %}
+      </ul>
+      <div class="divider"></div>
+    {% endif %}
+    <h5 class="center grey-text">Our Projects</h5>
       <div class="row">
         <div class="cards-container">
           {% for instance in object_list %}
@@ -11,7 +19,6 @@
              <div class="card hoverable z-depth-1">
                <div class="card-content center grey-text">
                  <p>{{ instance }} <a href='{% url 'donor:donation-within-project' instance.pk %}'class="right orange-text"><i class="material-icons small">person_add</i></a></p>
-
                </div>
                <div class="card-image">
                  <img src={% if instance.image.size is not None %} '{{ instance.image.url }}' {% else %} '{{ instance.image }}' {% endif %}>

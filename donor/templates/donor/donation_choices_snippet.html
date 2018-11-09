@@ -8,7 +8,7 @@
         We will select a child that is in need of sponsorship
       </p>
       <!-- Dropdown Trigger -->
-      <a class='dropdown-button btn orange darken-3' href='#' data-activates='dropdown1'>Donate</a>
+      <a class='dropdown-button btn orange darken-3' href='#' data-activates='dropdown1'>Sponsor</a>
       <br>
       <!-- Dropdown Structure -->
       <ul id='dropdown1' class='dropdown-content grey-text'>
@@ -29,7 +29,7 @@
         Donor chooses a project. Asha for Education will select a child that is in need of sponsorship within that project
       </p>
       <!-- Dropdown Trigger -->
-      <a class='dropdown-button btn orange darken-3' href='#' data-activates='dropdown2'>Donate</a>
+      <a class='dropdown-button btn orange darken-3' href='#' data-activates='dropdown2'>Sponsor</a>
       <br>
       <!-- Dropdown Structure -->
       <ul id='dropdown2' class='dropdown-content grey-text'>
@@ -42,11 +42,22 @@
     </div>
   </div>
   <div class="col s12 m4">
-    <div class="card-panel blue-grey">
+    <div class="card-panel blue-grey card hoverable z-depth-1">
       <h4 class="white-text">You Choose a Child</h4>
       <p class="white-text">
         Donor specifies preferences in project, age, gender, disability, or state for us to choose a child for sponsorship
       </p>
+      <!-- Dropdown Trigger -->
+      <a class='dropdown-button btn orange darken-3' href='#' data-activates='dropdown3'>Sponsor</a>
+      <br>
+      <!-- Dropdown Structure -->
+      <ul id='dropdown3' class='dropdown-content grey-text'>
+        <li><a href="{% url 'child:child-selection-dashboard' %}?sponsorship_amount=25">$25</a></li>
+        <li><a href="{% url 'child:child-selection-dashboard' %}?sponsorship_amount=50">$50</a></li>
+        <li><a href="{% url 'child:child-selection-dashboard' %}?sponsorship_amount=100">$100</a></li>
+        <li><a href="{% url 'child:child-selection-dashboard' %}?sponsorship_amount=500">$500</a></li>
+        <li><a href="{% url 'child:child-selection-dashboard' %}?sponsorship_amount=1000">$1000</a></li>
+      </ul>
     </div>
   </div>
 </div>

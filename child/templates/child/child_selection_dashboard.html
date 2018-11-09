@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+
+<div class="container">
+  <div class="row">
+    <div class="col s12 m4">
+
+    {% if object_list %}
+      <div class="row">
+        <div class="col s12">
+           <h5 class="center grey-text">Choose a Project</h5>
+         </div>
+      </div>
+      <div class="row">
+        <div class="cards-container">
+          {% for instance in object_list %}
+            <div class="row">
+              <div class="col s12">
+                <a href='{% url 'child:child-selection-dashboard' project_pk=instance.pk %}'>
+               <div class="card hoverable z-depth-1">
+                 <div class="card-content center">
+                   <p><a href='{% url 'project:project-detail' pk=instance.pk %}'>{{ instance }}</a></p>
+                 </div>
+                 <div class="card-image">
+                     <img src={% if instance.image.size is not None %} '{{ instance.image.url }}' {% else %} '{{ instance.image }}' {% endif %}>
+                 </div>
+                 <div class="card-content center grey-text">
+                   <p><a class="grey-text" href='{% url 'project:project-detail' instance.pk %}'> {{ instance.contact_addr_city }}, &nbsp; {{ instance.contact_addr_state }}</a></p>
+                 </div>
+                 <!-- <div class="card-action">
+                   <a href="#">This is a link</a>
+                   <a href="#">This is a link</a>
+                 </div> -->
+               </div>
+                </a>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% else %}
+      <div class="row">
+      <div class="col s12">
+        <h5 class= "grey-text">Currently there are no projects</h5>
+      </div>
+      </div>
+    {% endif %}
+  </div>
+
+      {% if object_list %}
+        <div class="col s12 m5 offset-m2">
+          <div class="row">
+            <div class="col s12">
+               <h5 class="center grey-text">Choose a Child to Sponsor</h5>
+             </div>
+          </div>
+          <table class="highlight responsive-table green lighten-5">
+            <thead>
+              <tr>
+                  <!-- <th class="center grey-text"><h5>Progress Report</h5><br> -->
+
+                    <th class="center grey-text"><br><h6 >{{ project }}</h6><br></th>
+              </tr>
+              <!-- <tr>
+                  <th class="center grey-text"><h5>{{ child }}</h5></th>
+              </tr> -->
+            </thead>
+            <tbody class="green lighten-5">
+              {% for instance in project_children %}
+              <tr>
+                <td class="center grey-text"><a href='{% url 'donor:donation-to-specific-child' child_pk=instance.pk %}'>Gender: {{ instance.gender }} &nbsp; Age: {{ instance.age }}</a></td>
+                <!-- <td class="center grey-text"><a href='{% url 'child:child-update' instance.pk %}'>Age: {{ instance.age }}</a></td> -->
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% endif %}
+  </div>
+</div> <!-- container ends here -->
+  {% include 'donor/donation_choices_snippet.html' %}
+{% endblock %}
+
+
+<!--
+1. define an id for child list <table>
+  2. define id for each li element (gender and age) in the target list
+</table>
+
+
+  -->

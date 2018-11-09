@@ -11,6 +11,8 @@ from .views import(
     ProgressDetailView,
     ProgressUpdateView,
     ProgressDeleteView,
+
+    ChildSelectionDashboardView,
 )
 
 app_name = 'child'
@@ -26,4 +28,8 @@ urlpatterns = [
     path('<int:child_pk>/progress/', ProgressListView.as_view(), name='progress-list'),
     path('<int:child_pk>/progress/<int:pk>/update/', ProgressUpdateView.as_view(), name='progress-update'),
     path('<int:child_pk>/progress/<int:pk>/delete/', ProgressDeleteView.as_view(), name='progress-delete'),
+
+    path('child-selection-dashboard/', ChildSelectionDashboardView.as_view(), name='child-selection-dashboard'),
+    path('child-selection-dashboard/<int:project_pk>/', ChildSelectionDashboardView.as_view(), name='child-selection-dashboard'),
+
 ]
