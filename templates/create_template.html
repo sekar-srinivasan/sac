@@ -10,7 +10,18 @@
       Last Name: {{ request.user.last_name }} <br>
       Email: {{ request.user.email }}
     </p>
-    {% include 'snippets/form_snippet.html' %}
+    <!-- {% include 'snippets/form_snippet.html' %} -->
+    <form class="active" method='POST'> {% csrf_token %}
+      {% for field in form %}
+        <div class="input-field">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+        </div>
+      {% endfor %}
+      <input type="hidden" name="next" value={{ request.GET.next }}>
+      <!-- <input type='submit' value='Save' /> -->
+      <button type="submit" class="success btn btn-large waves-effect waves-light">Save</button>
+    </form>
     </div>
 
   </div>

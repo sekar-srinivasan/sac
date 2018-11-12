@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.utils.http import urlencode
+from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.views import LoginView
@@ -15,9 +16,25 @@ class CustomLoginRequiredMixin(LoginRequiredMixin):
     def dispatch(self, request, *args, **kwargs):
         print("Inside CustomLoginRequiredMixin")
         print(self.request.session.items())
+        print("self.request.GET.get('sponsorship_amount')")
         print(self.request.GET.get('sponsorship_amount'))
+        print("self.kwargs.get('project_pk')")
+        print(self.kwargs.get('project_pk'))
+        print("self.kwargs.get('child_pk')")
+        print(self.kwargs.get('child_pk'))
         if self.request.GET.get('sponsorship_amount'):
             self.request.session['sponsorship_amount'] = self.request.GET.get('sponsorship_amount')
+            messages.info(self.request, "Thank you for deciding to sponsor $" + self.request.session['sponsorship_amount'] + ". You will see your assigned child after signing in.")
+        print(self.request.session.items())
+        if 'sponsorship_amount' in self.request.session:
+            if self.kwargs.get('project_pk'):
+                print(" inside if self.kwargs.get('project_pk')")
+                print(self.kwargs.get('project_pk'))
+                self.request.session['project_pk'] = self.kwargs.get('project_pk')
+            elif self.kwargs.get('child_pk'):
+                print(" inside if self.kwargs.get('child_pk')")
+                print(self.kwargs.get('child_pk'))
+                self.request.session['child_pk'] = self.kwargs.get('child_pk')
         print(self.request.session.items())
         return super(CustomLoginRequiredMixin, self).dispatch(request, *args, **kwargs)
 

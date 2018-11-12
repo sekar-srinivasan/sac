@@ -3,13 +3,31 @@
 {% block content %}
 <!-- <div class="container"> -->
 
-{% include 'create_template.html' %}
-{% endblock %}
+<div class="row">
+  <div class="col s12 m6 offset-m3">
+    <div class="card">
+      <div class="card-content">
+      <span class="card-title grey-text"><h4>Enter Donor Details...</h4></span>
+      </div>
+      <div class="card-content">
+      <p class = "grey-text">
+        First Name: {{ request.user.first_name }} <br>
+        Last Name: {{ request.user.last_name }} <br>
+        Email: {{ request.user.email }}
+      </p>
+      <form class="active" method='POST'> {% csrf_token %}
+        {% for field in form %}
+          <div class="input-field">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+          </div>
+        {% endfor %}
+        <input type="hidden" name="next" value={{ request.GET.next }}>
+        <button type="submit" class="success btn btn-large waves-effect waves-light">Create Donor Profile</button>
+      </form>
+      </div>
 
-<!-- <div class="row">
-  <div class="col s12 m4">
-    <div class="card-panel grey">This panel has 12 cols</div>
+    </div>
   </div>
-  <div class="col s6 offset-s4">
-    <div class="card-panel grey">This panel has 6 cols offset by 4 cols</div>
-  </div> -->
+</div>
+{% endblock %}

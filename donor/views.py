@@ -134,7 +134,7 @@ class DonationCreateView(CustomLoginRequiredMixin, DonorsGroupRequiredMixin, Cre
             return has_child
         if child_table_not_empty(self):
             print("Child has at least one record")
-            instance.child = Child.objects.get(pk=random.randint(1,Child.objects.last().pk))
+            instance.child = Child.objects.get(pk=random.randint(Child.objects.first().pk,Child.objects.last().pk))
             return super(DonationCreateView, self).form_valid(form)
         else:
             messages.error(self.request, "Oops!! There are no children in our database at this time. Please click on <label> CONTACT </label> to send us a message.")
@@ -198,7 +198,7 @@ class DonationWithinProjectCreateView(DonationCreateView):
             return has_child
         if child_exists(self):
             print("This project has at least one child")
-            instance.child = project.project_children.get(pk=random.randint(1,project.project_children.last().pk))
+            instance.child = project.project_children.get(pk=random.randint(project.project_children.first().pk,project.project_children.last().pk))
             return super(DonationWithinProjectCreateView, self).form_valid(form)
         else:
             messages.error(self.request, "Oops!! There are no children in this project at this time. Please click on <label> CONTACT </label> to send us a message.")
@@ -301,6 +301,20 @@ class DonationDetailView(LoginRequiredMixin, DonorsGroupRequiredMixin, DetailVie
 
 class DonorUserRegistrationView(RegistrationView):
     model = Donor
+
+    def dispatch(self, *args, **kwargs):
+        print(self.request.session.items())
+        if 'sponsorship_amount' in self.request.session:
+            message = "We have recorded your decision to sponsor $" + \
+                        self.request.session['sponsorship_amount'] + \
+                        ". You will see your assigned child after signing up as a Donor.<br> \
+                        This is a two step process: <br> \
+                        1. Create an Account by signing up below.<br> \
+                        2. Create a Donor Profile."
+
+            messages.info(self.request, message )
+        return super(DonorUserRegistrationView, self).dispatch(*args, **kwargs)
+
     def form_valid(self, form):
         super(DonorUserRegistrationView, self).form_valid(form)
         donors_group, created = Group.objects.get_or_create(name='donors')
@@ -311,6 +325,8 @@ class DonorUserRegistrationView(RegistrationView):
         print("user is: ")
         print(self.user)
         self.user.groups.add(donors_group)
+        # if 'sponsorship_amount' in self.request.session:
+
         # print(help(DonorUserRegistrationView))
         return redirect(reverse('donor:donor-create'), user = self.user)
 
@@ -320,7 +336,10 @@ class DonorCreateView(LoginRequiredMixin, DonorsGroupRequiredMixin, CreateView):
     group_required = [u'donors', u'admin']
     # html_var = 'Donor'
     # login_url='/login/'
-
+    def dispatch(self, *args, **kwargs):
+        print("inside DonorCreateView: dispatch")
+        print(self.request.session.items())
+        return super(DonorCreateView, self).dispatch(*args, **kwargs)
     def form_valid(self, form):
         instance = form.save(commit=False)
         #like a pre_save
@@ -328,47 +347,34 @@ class DonorCreateView(LoginRequiredMixin, DonorsGroupRequiredMixin, CreateView):
         instance.first_name=self.request.user.first_name
         instance.last_name=self.request.user.last_name
         instance.email=self.request.user.email
-        print('Inside DonorCreateView - form_valid, GET next is:')
-        print(self.request.GET.get('next'))
-        print('Inside DonorCreateView - form_valid, POST next is:')
-        print(self.request.POST.get('next'))
-        print(self.request.POST.get('next') is not None)
+        print('Inside DonorCreateView - form_valid, session contents:')
+        print(self.request.session.items())
         # instance.save()
         # like a post_save. instance.save() is not needed as we are going to call form_valid again below ehich does the save() and more...
+        print(instance.pk)
         return super(DonorCreateView, self).form_valid(form)
 
     def render_to_response(self, context):
         print("inside DonorCreateView render_to_response")
-        print(self.request.path)
-        print("POST is:")
-        print(self.request.POST)
-        print("GET is:")
-        print(self.request.GET)
+        print(self.request.session.items())
         return super(DonorCreateView, self).render_to_response(context)
 
     def get_success_url(self):
-        print('Inside DonorCreateView - get_success_url, GET is:')
-        print(self.request.GET.get('next'))
-        print('Inside DonorCreateView - get_success_url, POST is:')
-        POST_next = self.request.POST.get('next').strip()
-        def post_param_next_is_empty():
-            print("inside post_param_next_is_empty function")
-            print('POST_next:')
-            print(POST_next)
-            print('POST_next is None')
-            print(POST_next is None)
-            print('POST_next.strip():')
-            print(POST_next.strip())
-            print("POST_next.strip() or (POST_next is None):")
-            print(POST_next.strip() or (POST_next is None))
-            return (POST_next.strip() or (POST_next is None))
-
-        print("post_param_next_is_empty:")
-        print(post_param_next_is_empty())
-        # if not post_param_next_is_empty():
-        if POST_next:
-            print('sponsorship_amount is being set to 25 inside DonorCreateView: get_success_url')
-            return '/donor/donation?sponsorship_amount=25'
+        print('Inside DonorCreateView - get_success_url, sessions content:')
+        print(self.request.session.items())
+        print("self.kwargs.get('project_pk')")
+        print(self.kwargs.get('project_pk'))
+        print("self.kwargs.get('child_pk')")
+        print(self.kwargs.get('child_pk'))
+        print(self.request.session.items())
+        if 'sponsorship_amount' in self.request.session:
+            print('sponsorship_amount in session inside DonorCreateView: get_success_url')
+            if 'project_pk' in self.request.session:
+                return reverse('donor:donation-within-project', kwargs={'project_pk':self.request.session['project_pk']})
+            elif 'child_pk' in self.request.session:
+                return reverse('donor:donation-to-specific-child', kwargs={'child_pk':self.request.session['child_pk']})
+            else:
+                return reverse('donor:donation')
         return super(DonorCreateView, self).get_success_url()
 
 class DonorDetailView(LoginRequiredMixin, DonorsGroupRequiredMixin, DetailView):
