@@ -1,5 +1,6 @@
 from django import forms
 from .models import Donor, Donation
+from project.models import Project
 from .choices import SPONSORSHIP_CHOICES
 
 class DonorForm(forms.ModelForm):
@@ -43,3 +44,6 @@ class DonationForm(forms.ModelForm):
             'sponsorship_amount',
             'expiry_date',
         ]
+
+class DonationWithinProjectForm(DonationForm):
+    project = forms.ModelChoiceField(queryset=Project.objects.all())

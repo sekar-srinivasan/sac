@@ -3,7 +3,7 @@ from django.utils.http import urlencode
 from django.contrib import messages
 from child.models import Child
 from project.models import Project
-from .forms import DonorForm, DonationForm
+from .forms import DonorForm, DonationForm, DonationWithinProjectForm
 from django.urls import reverse
 from django.contrib.auth.models import Group
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -103,28 +103,14 @@ class DonationCreateView(CustomLoginRequiredMixin, DonorsGroupRequiredMixin, Cre
         Returns the initial data to use for forms on this view.
         """
         print("DonationCreateView: Inside get_initial")
-        print("GET next is:")
-        print(self.request.GET.get('next'))
         initial = super(DonationCreateView, self).get_initial()
         initial['sponsorship_amount'] = self.request.session.get('sponsorship_amount', 50)
-        # initial['sponsorship_amount'] = self.request.GET.get('sponsorship_amount')
         initial['expiry_date'] = now().replace(year=now().year+1)
         # initial['expiry_date'] = date.today().replace(year=date.today().year+1)
         return initial
 
-    def form_valid(self, form):
-        instance = form.save(commit=False)
-        #like a pre_save
-        print("DonationCreateView:Inside form_valid")
-        print(self.request.user.donor)
-        print("POST data:")
-        print(self.request.POST)
-        print("POST sponsorship_amount is:")
-        print(self.request.POST.get('sponsorship_amount'))
-        self.request.session['sponsorship_amount'] = self.request.POST.get('sponsorship_amount')
-        print(self.request.session.keys())
-        print(self.request.session.items())
-        instance.donor=self.request.user.donor
+    def assign_child_to_sponsor(self, form):
+        # gets called in form_valid() of DonationCreateView (parent class), needs to override in all child classes
         def child_table_not_empty(self):
             has_child = False
             try:
@@ -133,8 +119,23 @@ class DonationCreateView(CustomLoginRequiredMixin, DonorsGroupRequiredMixin, Cre
                 print("Child table is empty")
             return has_child
         if child_table_not_empty(self):
-            print("Child has at least one record")
-            instance.child = Child.objects.get(pk=random.randint(Child.objects.first().pk,Child.objects.last().pk))
+            print("Inside DonationCreateView: Child has at least one record")
+            child = Child.objects.get(pk=random.randint(Child.objects.first().pk,Child.objects.last().pk))
+            print("child: ")
+            print(child)
+            print("child.project: ")
+            print(child.project)
+            return child
+
+    def form_valid(self, form):
+        instance = form.save(commit=False)
+        #like a pre_save
+        print("DonationCreateView:Inside form_valid")
+        self.request.session['sponsorship_amount'] = self.request.POST.get('sponsorship_amount')
+        print(self.request.session.items())
+        instance.donor = self.request.user.donor
+        instance.child = self.assign_child_to_sponsor(form)
+        if instance.child:
             return super(DonationCreateView, self).form_valid(form)
         else:
             messages.error(self.request, "Oops!! There are no children in our database at this time. Please click on <label> CONTACT </label> to send us a message.")
@@ -142,7 +143,9 @@ class DonationCreateView(CustomLoginRequiredMixin, DonorsGroupRequiredMixin, Cre
             return super(DonationCreateView, self).form_invalid(form)
         # instance.save()
         # like a post_save. instance.save() is not needed as we are going to call form_valid again below ehich does the save() and more...
-
+    def get_next_url(self):
+        # gets called in render_to-response, needs to override in all child classes
+        return reverse('donor:donation') + '?sponsorship_amount=' + self.request.GET.get('sponsorship_amount')
 
     def render_to_response(self, context):
         def user_has_donor_profile(self):
@@ -153,16 +156,9 @@ class DonationCreateView(CustomLoginRequiredMixin, DonorsGroupRequiredMixin, Cre
                 pass
             return has_donor
         print("DonationCreateView: Inside render_to_response before")
-        print(self.request.path)
-        print("GET next is:")
-        print(self.request.GET.get('next'))
-        print(self.request.GET.get('sponsorship_amount'))
-        print("POST next is:")
-        print(self.request.POST.get('next'))
-        print(self.request.POST.get('sponsorship_amount'))
         if not user_has_donor_profile(self):
             path = reverse('donor:donor-create') #, kwargs={'question_id': 123})
-            next_url = reverse('donor:donation') + '?sponsorship_amount=' + self.request.GET.get('sponsorship_amount')
+            next_url = self.get_next_url()
             print("next_url is: %s", next_url)
             params = urlencode({'next': next_url})
             url = "%s?%s" % (path, params)
@@ -173,21 +169,27 @@ class DonationCreateView(CustomLoginRequiredMixin, DonorsGroupRequiredMixin, Cre
         return super(DonationCreateView, self).render_to_response(context)
 
 class DonationWithinProjectCreateView(DonationCreateView):
+    form_class = DonationWithinProjectForm
 
-    def form_valid(self, form):
-        instance = form.save(commit=False)
-        #like a pre_save
-        print("DonationWithinProjectCreateView:Inside form_valid")
-        print(self.request.user.donor)
-        print("POST data:")
-        print(self.request.POST)
-        print("POST sponsorship_amount is:")
-        print(self.request.POST.get('sponsorship_amount'))
-        instance.donor=self.request.user.donor
+    def get_initial(self):
+        """
+        Returns the initial data to use for forms on this view.
+        """
+        print("DonationWithinProjectCreateView: Inside get_initial")
+        initial = super(DonationWithinProjectCreateView, self).get_initial()
+        initial['project'] = Project.objects.get(pk=self.kwargs['project_pk'])
+        return initial
+
+    def assign_child_to_sponsor(self, form):
+        # gets called in form_valid() of DonationCreateView (parent class), needs to override in all child classes
         project = None
         try:
-            project = Project.objects.get(pk=self.kwargs['project_pk'])
+            project = form.cleaned_data['project']
+            # project = Project.objects.get(pk=self.kwargs['project_pk'])
+            print("project: ")
+            print(project)
         except Project.DoesNotExist:
+            print("project does not exist")
             messages.error(self.request, "This is not a valid project. Please click on <label> PROJECTS </label> and pick a project to sponsor.")
         def child_exists(self):
             has_child = False
@@ -197,87 +199,33 @@ class DonationWithinProjectCreateView(DonationCreateView):
                 messages.error(self.request, "There are no children needing sponsorship at this time. Please click on <label> PROJECTS </label> and pick another project to sponsor.")
             return has_child
         if child_exists(self):
-            print("This project has at least one child")
-            instance.child = project.project_children.get(pk=random.randint(project.project_children.first().pk,project.project_children.last().pk))
-            return super(DonationWithinProjectCreateView, self).form_valid(form)
-        else:
-            messages.error(self.request, "Oops!! There are no children in this project at this time. Please click on <label> CONTACT </label> to send us a message.")
-            # Future enhancement: override form_invalid to perform error handling for empty child table scenario
-            return super(DonationWithinProjectCreateView, self).form_invalid(form)
-        # instance.save()
-        # like a post_save. instance.save() is not needed as we are going to call form_valid again below ehich does the save() and more...
-
-
-    def render_to_response(self, context):
-        def user_has_donor_profile(self):
-            has_donor = False
-            try:
-                has_donor = (self.request.user.donor is not None)
-            except Donor.DoesNotExist:
-                pass
-            return has_donor
-        print("DonationWithinProjectCreateView: Inside render_to_response before")
-        print(self.request.path)
-        print("GET next is:")
-        print(self.request.GET.get('next'))
-        print(self.request.GET.get('sponsorship_amount'))
-        print("POST next is:")
-        print(self.request.POST.get('next'))
-        print(self.request.POST.get('sponsorship_amount'))
-        if not user_has_donor_profile(self):
-            path = reverse('donor:donor-create') #kwargs={'project_pk': self.kwargs['project_pk']}
-            next_url = reverse('donor:donation-within-project', kwargs={'project_pk': self.kwargs['project_pk']}) + '?sponsorship_amount=' + self.request.GET.get('sponsorship_amount')
-            print("next_url is: %s", next_url)
-            params = urlencode({'next': next_url})
-            url = "%s?%s" % (path, params)
-            print(url)
-            return redirect(url)
-        print("DonationWithinProjectCreateView: Inside render_to_response after")
-        # next='/donor/donation?sponsorship_amount=25'
-        return super(DonationWithinProjectCreateView, self).render_to_response(context)
+            print("Insided DonationWithinProjectCreateView: This project has at least one child")
+            child = project.project_children.get(pk=random.randint(project.project_children.first().pk,project.project_children.last().pk))
+            print("child: ")
+            print(child)
+            print("child.project: ")
+            print(child.project)
+            return child
+    def get_next_url(self):
+        # gets called in render_to-response of DonationCreateView (parent class), needs to override in all child classes
+        print("DonationWithinProjectCreateView: Inside get_next_url")
+        return reverse('donor:donation-within-project', kwargs={'project_pk': self.kwargs['project_pk']}) + '?sponsorship_amount=' + self.request.GET.get('sponsorship_amount')
 
 class DonationToSpecificChildCreateView(DonationCreateView):
 
-    def form_valid(self, form):
-        instance = form.save(commit=False)
-        #like a pre_save
-        print("DonationToSpecificChildCreateView:Inside form_valid")
-        print(self.request.user.donor)
-        print("POST data:")
-        print(self.request.POST)
-        print("POST sponsorship_amount is:")
-        print(self.request.POST.get('sponsorship_amount'))
-        instance.donor=self.request.user.donor
-        instance.child = Child.objects.get(pk=self.kwargs['child_pk'])
-        return super(DonationToSpecificChildCreateView, self).form_valid(form)
-
-    def render_to_response(self, context):
-        def user_has_donor_profile(self):
-            has_donor = False
-            try:
-                has_donor = (self.request.user.donor is not None)
-            except Donor.DoesNotExist:
-                pass
-            return has_donor
-        print("DonationToSpecificChildCreateView: Inside render_to_response before")
-        print(self.request.path)
-        print("GET next is:")
-        print(self.request.GET.get('next'))
-        print(self.request.GET.get('sponsorship_amount'))
-        print("POST next is:")
-        print(self.request.POST.get('next'))
-        print(self.request.POST.get('sponsorship_amount'))
-        if not user_has_donor_profile(self):
-            path = reverse('donor:donor-create') #kwargs={'project_pk': self.kwargs['project_pk']}
-            next_url = reverse('donor:donation-to-specific-child', kwargs={'child_pk': self.kwargs['child_pk']}) + '?sponsorship_amount=' + self.request.GET.get('sponsorship_amount')
-            print("next_url is: %s", next_url)
-            params = urlencode({'next': next_url})
-            url = "%s?%s" % (path, params)
-            print(url)
-            return redirect(url)
-        print("DonationToSpecificChildCreateView: Inside render_to_response after")
-        # next='/donor/donation?sponsorship_amount=25'
-        return super(DonationToSpecificChildCreateView, self).render_to_response(context)
+    def assign_child_to_sponsor(self, form):
+        # gets called in form_valid() of DonationCreateView (parent class), needs to override in all child classes
+        print("Inside DonationToSpecificChildCreateView: This project has at least one child")
+        child = Child.objects.get(pk=self.kwargs['child_pk'])
+        print("child: ")
+        print(child)
+        print("child.project: ")
+        print(child.project)
+        return child
+    def get_next_url(self):
+        # gets called in render_to-response of DonationCreateView (parent class), needs to override in all child classes
+        print("DonationToSpecificChildCreateView: Inside get_next_url")
+        return reverse('donor:donation-to-specific-child', kwargs={'child_pk': self.kwargs['child_pk']}) + '?sponsorship_amount=' + self.request.GET.get('sponsorship_amount')
 
 class DonationDetailView(LoginRequiredMixin, DonorsGroupRequiredMixin, DetailView):
     template_name = 'donor/donation_detail.html'
