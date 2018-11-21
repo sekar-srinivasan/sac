@@ -145,7 +145,8 @@ class DonationCreateView(CustomLoginRequiredMixin, DonorsGroupRequiredMixin, Cre
         # like a post_save. instance.save() is not needed as we are going to call form_valid again below ehich does the save() and more...
     def get_next_url(self):
         # gets called in render_to-response, needs to override in all child classes
-        return reverse('donor:donation') + '?sponsorship_amount=' + self.request.GET.get('sponsorship_amount')
+        print(self.request.session.items())
+        return reverse('donor:donation') + '?sponsorship_amount=' + self.request.session.get('sponsorship_amount')
 
     def render_to_response(self, context):
         def user_has_donor_profile(self):
@@ -158,6 +159,7 @@ class DonationCreateView(CustomLoginRequiredMixin, DonorsGroupRequiredMixin, Cre
         print("DonationCreateView: Inside render_to_response before")
         if not user_has_donor_profile(self):
             path = reverse('donor:donor-create') #, kwargs={'question_id': 123})
+            print(self.request.session.items())
             next_url = self.get_next_url()
             print("next_url is: %s", next_url)
             params = urlencode({'next': next_url})
@@ -209,7 +211,12 @@ class DonationWithinProjectCreateView(DonationCreateView):
     def get_next_url(self):
         # gets called in render_to-response of DonationCreateView (parent class), needs to override in all child classes
         print("DonationWithinProjectCreateView: Inside get_next_url")
-        return reverse('donor:donation-within-project', kwargs={'project_pk': self.kwargs['project_pk']}) + '?sponsorship_amount=' + self.request.GET.get('sponsorship_amount')
+        print(self)
+        print(self.kwargs['project_pk'])
+        print(self.request.session.items())
+        print(self.request.GET.get('sponsorship_amount'))
+        # return reverse('donor:donation-within-project', kwargs={'project_pk': self.kwargs['project_pk']}) #+ '?sponsorship_amount=' + self.request.GET.get('sponsorship_amount')
+        return reverse('donor:donation-within-project', kwargs={'project_pk': self.kwargs['project_pk']}) + '?sponsorship_amount=' + self.request.session.get('sponsorship_amount')
 
 class DonationToSpecificChildCreateView(DonationCreateView):
 
@@ -225,7 +232,8 @@ class DonationToSpecificChildCreateView(DonationCreateView):
     def get_next_url(self):
         # gets called in render_to-response of DonationCreateView (parent class), needs to override in all child classes
         print("DonationToSpecificChildCreateView: Inside get_next_url")
-        return reverse('donor:donation-to-specific-child', kwargs={'child_pk': self.kwargs['child_pk']}) + '?sponsorship_amount=' + self.request.GET.get('sponsorship_amount')
+        print(self.request.session.items())
+        return reverse('donor:donation-to-specific-child', kwargs={'child_pk': self.kwargs['child_pk']}) + '?sponsorship_amount=' + self.request.session.get('sponsorship_amount')
 
 class DonationDetailView(LoginRequiredMixin, DonorsGroupRequiredMixin, DetailView):
     template_name = 'donor/donation_detail.html'
