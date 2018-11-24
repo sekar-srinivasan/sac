@@ -120,7 +120,8 @@ class DonationCreateView(CustomLoginRequiredMixin, DonorsGroupRequiredMixin, Cre
             return has_child
         if child_table_not_empty(self):
             print("Inside DonationCreateView: Child has at least one record")
-            child = Child.objects.get(pk=random.randint(Child.objects.first().pk,Child.objects.last().pk))
+            # child = Child.objects.get(pk=random.randint(Child.objects.first().pk,Child.objects.last().pk))
+            child = random.choice(Child.objects.all())
             print("child: ")
             print(child)
             print("child.project: ")
@@ -202,7 +203,7 @@ class DonationWithinProjectCreateView(DonationCreateView):
             return has_child
         if child_exists(self):
             print("Insided DonationWithinProjectCreateView: This project has at least one child")
-            child = project.project_children.get(pk=random.randint(project.project_children.first().pk,project.project_children.last().pk))
+            child = random.choice(project.project_children.all())
             print("child: ")
             print(child)
             print("child.project: ")
