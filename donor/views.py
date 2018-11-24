@@ -135,11 +135,13 @@ class DonationCreateView(CustomLoginRequiredMixin, DonorsGroupRequiredMixin, Cre
         self.request.session['sponsorship_amount'] = self.request.POST.get('sponsorship_amount')
         print(self.request.session.items())
         instance.donor = self.request.user.donor
-        instance.child = self.assign_child_to_sponsor(form)
-        if instance.child:
+        child = self.assign_child_to_sponsor(form)
+        if child:
+            print("inside child is not None check")
+            instance.child = child
             return super(DonationCreateView, self).form_valid(form)
         else:
-            messages.error(self.request, "Oops!! There are no children in our database at this time. Please click on <label> CONTACT </label> to send us a message.")
+            messages.error(self.request, "Oops!! There are no children to be assigned at this time. Please click on <label> CONTACT </label> to send us a message.")
             # Future enhancement: override form_invalid to perform error handling for empty child table scenario
             return super(DonationCreateView, self).form_invalid(form)
         # instance.save()
@@ -202,13 +204,16 @@ class DonationWithinProjectCreateView(DonationCreateView):
                 messages.error(self.request, "There are no children needing sponsorship at this time. Please click on <label> PROJECTS </label> and pick another project to sponsor.")
             return has_child
         if child_exists(self):
-            print("Insided DonationWithinProjectCreateView: This project has at least one child")
+            print("Inside DonationWithinProjectCreateView: This project has at least one child")
             child = random.choice(project.project_children.all())
             print("child: ")
             print(child)
             print("child.project: ")
             print(child.project)
             return child
+        else:
+            print("Inside DonationWithinProjectCreateView.assign_child_to_sponsor" )
+            return None
     def get_next_url(self):
         # gets called in render_to-response of DonationCreateView (parent class), needs to override in all child classes
         print("DonationWithinProjectCreateView: Inside get_next_url")
