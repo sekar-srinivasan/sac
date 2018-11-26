@@ -18,7 +18,7 @@ class Child(models.Model):
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     age = models.PositiveIntegerField()
     image = models.ImageField(blank = True, default = 'child_pics/happy_apna_skool_kid.jpg', upload_to='child_pics')
-
+    sponsored = models.BooleanField(default=False)
     def __str__(self):
         return self.first_name + ' ' + self.last_name
 

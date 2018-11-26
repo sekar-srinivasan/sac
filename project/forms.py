@@ -47,5 +47,6 @@ class ProjectForm(forms.ModelForm):
             'location_addr_city',
             'location_addr_state',
             'location_addr_zip',
+            'sponsorship_amount_per_child',
             'image',
         ]
