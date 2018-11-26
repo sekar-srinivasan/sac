@@ -33,6 +33,7 @@
             <ul class="collection">
               <li class="collection-item"><h6>Gender: {{ object.gender }}</h6></li>
               <li class="collection-item">Age: {{ object.age }}</li>
+              <li class="collection-item valign-wrapper">Sponsored: {% if object.sponsored %}  <i class="material-icons green-text">done</i> {% else %}  <i class="material-icons red-text">clear</i> {% endif %}</li>
               <!-- <li class="collection-item">User: {{ object.project_owner_user.username }}</li> -->
             </ul>
           </td>

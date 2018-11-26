@@ -11,11 +11,14 @@
         <!-- {{ field.id_for_label }} -->
       <!-- {% if field.id_for_label != 'id_project' %} -->
         <div class="input-field">
-          {% if field.id_for_label == 'id_image' or field.id_for_label == 'id_gender'%}
+          {% if field.id_for_label == 'id_image' or field.id_for_label == 'id_gender' or field.id_for_label == 'id_sponsored'%}
             <br>
           {% endif %}
+        
+
         <label for="{{ field.id_for_label }}"> {{ field.label|safe }}</label>
         {% if field.id_for_label == 'id_image' %}
+        <!-- <br> -->
         <br>
         {% endif %}
         {{ field }}

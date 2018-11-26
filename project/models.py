@@ -42,7 +42,7 @@ class Project(models.Model):
     location_addr_city = models.CharField(blank=True, max_length=50)
     location_addr_state = models.CharField(blank=True, max_length=100)
     location_addr_zip = models.CharField(blank=True, max_length=6)
-    sponsorship_amount_per_child = models.FloatField(default=50)
+    sponsorship_needed_per_child = models.FloatField(default=50)
     image = models.ImageField(blank = True, default = 'project_pics/india.gif', upload_to='project_pics')
 
     objects = ProjectManager()
