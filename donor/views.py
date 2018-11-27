@@ -12,6 +12,7 @@ import random
 from datetime import date
 from django.utils.timezone import now
 from .models import Donor, Donation
+from django.db import IntegrityError
 
 from django.views.generic import (
     View,
@@ -139,7 +140,11 @@ class DonationCreateView(CustomLoginRequiredMixin, DonorsGroupRequiredMixin, Cre
         if child:
             print("inside child is not None check")
             instance.child = child
-            return super(DonationCreateView, self).form_valid(form)
+            try:
+                return super(DonationCreateView, self).form_valid(form)
+            except IntegrityError:
+                messages.error(self.request, "Oops!! This child has an existing sponsor. Please try again to choose a child that needs a sponsor.")
+                return super(DonationCreateView, self).form_invalid(form)
         else:
             messages.error(self.request, "Oops!! There are no children to be assigned at this time. Please click on <label> CONTACT </label> to send us a message.")
             # Future enhancement: override form_invalid to perform error handling for empty child table scenario
