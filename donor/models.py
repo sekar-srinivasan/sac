@@ -60,7 +60,7 @@ class Donor(models.Model):
 
 class Donation(models.Model):
     donor = models.ForeignKey(Donor, on_delete=models.PROTECT, related_name='donor_donations')
-    child = models.ForeignKey(Child, on_delete=models.PROTECT, related_name='child_donations')
+    child = models.OneToOneField(Child, on_delete=models.PROTECT)
     sponsorship_amount = models.FloatField()
     expiry_date = models.DateField()
     # expiry_date = models.DateField(default=date.today().replace(year=date.today().year+1))
