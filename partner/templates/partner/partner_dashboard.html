@@ -14,7 +14,7 @@
             <tbody>
               {% for instance in object_list %}
               <tr>
-                <td><a href='{% url 'partner:partner-dashboard' project_pk=instance.pk %}'>{{ instance }} {{ instance.pk }} </a></td>
+                <td><a href='{% url 'partner:partner-dashboard' project_pk=instance.pk %}'>{{ instance }} </a></td>
                 <td class="center"><a href='{% url 'child:child-create' instance.pk %}'><i class="material-icons orange-text">add</i></a></td>
               </tr>
               {% endfor %}
