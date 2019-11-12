@@ -29,16 +29,8 @@
         Donor chooses a project. Asha for Education will select a child that is in need of sponsorship within that project
       </p>
       <!-- Dropdown Trigger -->
-      <a class='dropdown-button btn orange darken-3' href='#' data-activates='dropdown2'>Sponsor</a>
+      <a class='btn orange darken-3' href="{% url 'project:project-list' %}">Sponsor</a>
       <br>
-      <!-- Dropdown Structure -->
-      <ul id='dropdown2' class='dropdown-content grey-text'>
-        <li><a href="{% url 'project:project-list' %}?sponsorship_amount=25">$25</a></li>
-        <li><a href="{% url 'project:project-list' %}?sponsorship_amount=50">$50</a></li>
-        <li><a href="{% url 'project:project-list' %}?sponsorship_amount=100">$100</a></li>
-        <li><a href="{% url 'project:project-list' %}?sponsorship_amount=500">$500</a></li>
-        <li><a href="{% url 'project:project-list' %}?sponsorship_amount=1000">$1000</a></li>
-      </ul>
     </div>
   </div>
   <div class="col s12 m4">
